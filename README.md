@@ -1,4 +1,4 @@
-strong-lint
-===========
+strong-tools
+============
 
-Simple package.json linter
+Simple package linter.
