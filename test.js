@@ -16,6 +16,12 @@ assert(lowVersion,
 assert(_.contains(lowVersion, 'Version "0.0.0" is lower than 1.0.0'),
        '  is too low');
 
+var prerelease = lint({ version: '1.0.0-0' });
+assert(prerelease,
+       'Version 1.0.0-0');
+assert(!_.contains(prerelease, 'Version "1.0.0-0" is lower than 1.0.0'),
+       '  is allowed');
+
 var badVersion = lint({ version: 'x.y.z' });
 assert(badVersion,
        'Version x.y.z:');
