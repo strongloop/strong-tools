@@ -1,5 +1,5 @@
 var assert = require('tapsert');
-var lint = require('./').lint;
+var lint = require('../').lint;
 var _ = require('lodash');
 
 var empty = lint({});
@@ -28,10 +28,10 @@ assert(badVersion,
 assert(_.contains(badVersion, 'Version "x.y.z" is invalid'),
        '  is a bad version');
 
-var badRepo = lint({ repository: 'git@github.com:strongloop/strong-lint.git' });
+var badRepo = lint({ repository: 'BAD' });
 assert(badRepo,
        'Repository as a string');
-assert(_.contains(badRepo, 'Repository "git@github.com:strongloop/strong-lint.git" is a string, not an object'),
+assert(_.contains(badRepo, 'Repository "BAD" is a string, not an object'),
        '  is not valid');
 
 

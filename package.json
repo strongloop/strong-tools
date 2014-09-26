@@ -4,7 +4,7 @@
   "description": "Package linter from StrongLoop",
   "main": "index.js",
   "scripts": {
-    "test": "node test.js --tap"
+    "test": "node test/test-lint.js --tap"
   },
   "repository": {
     "type": "git",
