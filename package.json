@@ -22,7 +22,9 @@
   },
   "homepage": "https://github.com/strongloop/strong-lint",
   "dependencies": {
+    "gift": "^0.4.3-1",
     "lodash": "^2.4.1",
+    "normalize-package-data": "^1.0.3",
     "semver": "^4.0.0"
   },
   "bin": {
