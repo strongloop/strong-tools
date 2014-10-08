@@ -8,7 +8,7 @@ var pkg = path.resolve(process.argv[3] || './package.json');
 
 if (cmd in tools) {
   if (tools[cmd].cli)
-    tools[cmd].cli(pkg);
+    tools[cmd].cli.apply(null, process.argv.slice(3));
   else
     defaultCLI(tools[cmd], pkg);
 } else {
