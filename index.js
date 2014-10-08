@@ -3,4 +3,5 @@ module.exports = {
   cla: require('./lib/cla'),
   Project: require('./lib/project'),
   info: require('./lib/info'),
+  version: require('./lib/version'),
 };

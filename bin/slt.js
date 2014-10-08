@@ -23,6 +23,7 @@ function usage($0, p) {
   p('  lint      Perform a simple linting of the given package.json');
   p('  cla       Create or verify contribution guidelines');
   p('  info      Display metadata about package');
+  p('  version   Version manipulation');
   p('  help      Print this usage guide');
   p('');
 }
