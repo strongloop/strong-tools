@@ -26,8 +26,8 @@ for (var i in incs) {
                      '-- increments ' + i + ' to ' + incs[i]);
 }
 
-tools.version.GIT_COMMIT = null;
-tools.version.BUILD_NUMBER = null;
+tools.version.GIT_COMMIT = 'aaaabbbbbccccccddddd';
+tools.version.BUILD_NUMBER = '10';
 
 assert(tools.version.cli, 'version exports a CLI');
 tools.version.cli.out = function() {};
@@ -36,5 +36,5 @@ tools.version.cli('inc', SANDBOX_PKG);
 var updated = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
 assert(original.version != updated.version,
        '-- should change version in package');
-assert.strictEqual(updated.version, '1.0.0-1',
+assert.strictEqual(updated.version, '1.0.0-10.aaaabbb',
                    '-- should increment missing version to 1.0.0-1');
