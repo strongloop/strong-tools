@@ -26,6 +26,9 @@ for (var i in incs) {
                      '-- increments ' + i + ' to ' + incs[i]);
 }
 
+tools.version.GIT_COMMIT = null;
+tools.version.BUILD_NUMBER = null;
+
 assert(tools.version.cli, 'version exports a CLI');
 tools.version.cli.out = function() {};
 var original = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
