@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require 'optparse'
 require 'pathname'
 
 class GitRepo
@@ -42,6 +43,24 @@ class GitRepo
       end
     end
     releases.reverse.join("\n\n") + "\n"
+  end
+
+  def latest
+    # --full-history: include individual commits from merged branches
+    # --date-order: order commits by date, not topological order
+    base = "#{git} log --full-history --date-order --pretty='format:%s (%an)'"
+    last_release = `#{git} rev-list --tags --max-count=1`.strip
+    if last_release.empty?
+      last_release = `git rev-list --max-parents=0 HEAD`.strip
+    end
+    if sha1('HEAD') != sha1(last_release)
+      release_tag = `#{git} tag --points-at=#{last_release}`.strip
+      release = []
+      release << changelog_filter(`#{base} #{last_release}..`)
+      release.reverse.join("\n")
+    else
+      ''
+    end
   end
 
   def changelog_filter(log)
@@ -90,15 +109,21 @@ class GitRepo
 end
 
 repo = GitRepo.new('.')
-show_unreleased = false
-filename = 'CHANGES.md'
-ARGV.each do |arg|
-  case arg
-  when '-u', '--unreleased'
-    show_unreleased = true
-  else
-    filename = arg
+options = {}
+OptionParser.new do |opts|
+  opts.banner = 'Usage: slt-changelog [options]'
+  opts.on('-u', '--unreleased', 'Include unreleased changes in changelog') do |v|
+    options[:unreleased] = true
   end
+  opts.on('-s', '--summary', 'Print latest changes only, to stdout') do |s|
+    options[:summary] = true
+  end
+end.parse!
+
+if options[:summary]
+  puts repo.latest
+else
+  filename = ARGV.first || 'CHANGES.md'
+  changelog = repo.changelog(options[:unreleased])
+  IO.write(filename, changelog)
 end
-changelog = repo.changelog(show_unreleased)
-IO.write(filename, changelog)
