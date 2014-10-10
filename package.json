@@ -29,6 +29,7 @@
   },
   "bin": {
     "slt": "bin/slt.js",
+    "slt-stage": "bin/slt-stage.rb",
     "slt-changelog": "bin/slt-changelog.rb"
   },
   "devDependencies": {
