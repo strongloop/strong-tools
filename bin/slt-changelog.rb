@@ -11,7 +11,7 @@ class GitRepo
     end
   end
 
-  def changelog(unreleased=false)
+  def changelog(next_release=false)
     # --full-history: include individual commits from merged branches
     # --date-order: order commits by date, not topological order
     base = "#{git} log --full-history --date-order --pretty='format:%s (%an)'"
@@ -31,11 +31,11 @@ class GitRepo
       release << "#{release_heading}\n#{'='*release_heading.length}\n"
       releases << release.reverse.join("\n")
     end
-    if unreleased
+    if next_release
       last_release = `#{git} rev-list --tags --max-count=1`.strip
       if sha1('HEAD') != sha1(last_release) and not last_release.empty?
         release_tag = `#{git} tag --points-at=#{last_release}`.strip
-        release_heading = `#{git} log --date=short --format="Changes since %ad" -n1 #{last_release}`.strip + ", Version #{clean_version(release_tag)}"
+        release_heading = "#{Time.now.utc.strftime("%Y-%m-%d")}, Version #{clean_version(next_release)}"
         release = []
         release << changelog_filter(`#{base} #{last_release}..`)
         release << "#{release_heading}\n#{'='*release_heading.length}\n" unless release.empty?
@@ -112,8 +112,8 @@ repo = GitRepo.new('.')
 options = {}
 OptionParser.new do |opts|
   opts.banner = 'Usage: slt-changelog [options]'
-  opts.on('-u', '--unreleased', 'Include unreleased changes in changelog') do |v|
-    options[:unreleased] = true
+  opts.on('-v', '--version VERSION', 'Version to describe as next version') do |v|
+    options[:version] = v
   end
   opts.on('-s', '--summary', 'Print latest changes only, to stdout') do |s|
     options[:summary] = true
@@ -124,6 +124,6 @@ if options[:summary]
   puts repo.latest
 else
   filename = ARGV.first || 'CHANGES.md'
-  changelog = repo.changelog(options[:unreleased])
+  changelog = repo.changelog(options[:version])
   IO.write(filename, changelog)
 end
