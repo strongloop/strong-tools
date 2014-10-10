@@ -1,4 +1,4 @@
 strong-tools
 ============
 
-Simple package linter.
+Helpers to building, testing, staging, and releasing modules at StrongLoop.
