@@ -28,11 +28,15 @@
     "semver": "^4.0.0"
   },
   "bin": {
-    "slt": "bin/slt.js"
+    "slt": "bin/slt.js",
+    "slt-changelog": "bin/slt-changelog.rb"
   },
   "devDependencies": {
     "glob": "^4.0.6",
     "rimraf": "^2.2.8",
     "tapsert": "^1.0.0"
+  },
+  "engine": {
+    "ruby": "^2.0.0"
   }
 }
