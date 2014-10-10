@@ -19,6 +19,7 @@ def ver(str)
 end
 
 def inc_patch(v)
+  v = ver(v)
   [v[0], v[1], v[2]+1]
 end
 
@@ -31,16 +32,16 @@ end
 current = JSON.load(IO.read('package.json'))
 published = JSON.load(`npm info --json #{current['name']}`) rescue {}
 
-cur_ver = ver(current['version'] || '1.0.0')
-latest = published['dist-tags']['latest'] rescue '1.0.0'
-pub_ver = ver(latest)
+cur_ver = ver(current['version'] || '0.0.0')
+latest = published['dist-tags']['latest'] rescue '0.0.0'
+next_ver = [cur_ver, inc_patch(latest)].max
 
-if ((cur_ver <=> pub_ver) > 0)
+if next_ver == cur_ver
   puts "local version newer than published, using it"
 else
-  puts "published version newer than local, using publshed + 0.0.1"
-  next_ver = inc_patch(pub_ver).join('.')
-  system "npm version --git-tag-version=false --sign-git-tag=false #{next_ver}"
+  version = next_ver.join('.')
+  puts "published version newer than local, using publshed + 0.0.1 => #{version}"
+  system "npm version --git-tag-version=false --sign-git-tag=false #{version}"
 end
 
 exec "npm install && npm publish"
