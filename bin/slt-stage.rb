@@ -29,7 +29,7 @@ if registry =~ /registry\.npmjs\.org/
 end
 
 current = JSON.load(IO.read('package.json'))
-published = JSON.load(`npm info --json #{current['name']}`)
+published = JSON.load(`npm info --json #{current['name']}`) rescue {}
 
 cur_ver = ver(current['version'] || '1.0.0')
 latest = published['dist-tags']['latest'] rescue '1.0.0'
