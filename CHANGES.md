@@ -1,4 +1,4 @@
-2014-10-10, Version 1.1.0
+2014-10-09, Version 1.1.0
 =========================
 
  * Change slt-changelog --unreleased to --version VERSION (Ryan Graham)
