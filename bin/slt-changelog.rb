@@ -16,7 +16,7 @@ class GitRepo
     # --date-order: order commits by date, not topological order
     base = "#{git} log --full-history --date-order --pretty='format:%s (%an)'"
     releases = []
-    tags = `#{git} tag`.strip.lines.map(&:strip)
+    tags = tags_by_date
     return '' if tags.empty?
     release_heading = `#{git} log --date=short --format="%ad" -n1 '#{tags.first}'`.strip + ", Version #{clean_version(tags.first)}"
     release = []
@@ -43,6 +43,12 @@ class GitRepo
       end
     end
     releases.reverse.join("\n\n") + "\n"
+  end
+
+  def tags_by_date
+    `#{git} tag`.strip.lines.map(&:strip).sort_by do |tag|
+      `git log -1 --date=short --format=format:%cd #{tag}`.strip
+    end
   end
 
   def latest
