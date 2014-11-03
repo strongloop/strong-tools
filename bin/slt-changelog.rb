@@ -51,7 +51,7 @@ class GitRepo
     end
   end
 
-  def latest
+  def latest(version=false)
     # --full-history: include individual commits from merged branches
     # --date-order: order commits by date, not topological order
     base = "#{git} log --full-history --date-order --pretty='format:%s (%an)'"
@@ -60,9 +60,11 @@ class GitRepo
       last_release = `git rev-list --max-parents=0 HEAD`.strip
     end
     if sha1('HEAD') != sha1(last_release)
-      release_tag = `#{git} tag --points-at=#{last_release}`.strip
       release = []
       release << changelog_filter(`#{base} #{last_release}..`)
+      if version
+        release << "#{clean_version(version)}\n"
+      end
       release.reverse.join("\n")
     else
       ''
@@ -97,19 +99,7 @@ class GitRepo
   attr_reader :repo
 
   def git
-    "git --git-dir=#{ensure_repo}"
-  end
-
-  def ensure_repo
-    @dir ||= begin
-      if system "git rev-parse --show-toplevel"
-        `git rev-parse --show-toplevel`.strip + '/.git'
-      else
-        dir = Dir.mktmpdir
-        system "git clone --bare #{repo} #{dir}"
-        Pathname(dir)
-      end
-    end
+    "git"
   end
 
 end
@@ -127,7 +117,7 @@ OptionParser.new do |opts|
 end.parse!
 
 if options[:summary]
-  puts repo.latest
+  puts repo.latest(options[:version])
 else
   filename = ARGV.first || 'CHANGES.md'
   changelog = repo.changelog(options[:version])
