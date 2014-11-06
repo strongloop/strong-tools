@@ -10,12 +10,13 @@ fi
 set -e
 
 V=${1:?version is mandatory}
+TAG="v$V"
 
 echo "Merging release branch to production and tag as $V"
 git checkout production
 git pull --ff-only origin production
 git merge --no-ff --no-edit release/"$V"
-git tag -a "v$V" -m "$V"
+git tag -a "$TAG" -m "$V"
 # Need -D because master has not been pushed to origin/master. If we auto-push,
 # we can change it to --delete, but I think it does no harm to use -D.
 git branch -D release/"$V"
@@ -23,16 +24,16 @@ git branch -D release/"$V"
 echo "Merging production branch to master"
 git checkout master
 git pull --ff-only origin master
-git merge --no-ff --no-edit "$V"
+git merge --no-ff --no-edit "$TAG"
 git checkout production
 
 if [ "$SLT_RELEASE_UPDATE" = "y" ]
 then
   echo "Pushing tag $V and branches production and master to origin"
-  git push origin $V:$V production:production master:master
+  git push origin "$TAG:$TAG" production:production master:master
 else
-  echo "Push tag $V and branches production and master to origin when ready:"
-  echo "  git push origin $V:$V production:production master:master"
+  echo "Push tag $TAG and branches production and master to origin when ready:"
+  echo "  git push origin $TAG:$TAG production:production master:master"
 fi
 
 if [ "$SLT_RELEASE_PUBLISH" = "y" ]
