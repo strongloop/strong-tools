@@ -5,6 +5,8 @@ Helpers to building, testing, staging, and releasing modules at StrongLoop.
 
 ## Current commands
 
+ * `slt-release`
+   * Runs the strongloop/npm package variant of git flow
  * `slt-changelog`
    * Writes changelog
    * Requires Ruby 1.9+
@@ -13,6 +15,22 @@ Helpers to building, testing, staging, and releasing modules at StrongLoop.
    * Requres Ruby 1.9+
  * `slt`
    * lint, CLA boilerplate, package version manipulation, others...
+
+### slt-release
+
+```
+usage: slt-release [-hun] VERSION [FROM]
+
+Options:
+  h   print this helpful message
+  u   update the origin with a git push
+  n   publish the package to npmjs.org
+
+VERSION must be specified and should be `x.y.z` (with no leading `v`).
+
+FROM is optional, and is where the release branch should start from, the
+default is origin/master.
+```
 
 ### slt-changelog
 
