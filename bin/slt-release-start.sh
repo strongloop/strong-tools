@@ -12,7 +12,7 @@ set -e
 V=${1:?version is mandatory}
 H=${2:-origin/master}
 
-echo "Creating release branch `release/$V` from $H"
+echo "Creating release branch 'release/$V' from $H"
 git checkout -b release/"$V" "$H"
 
 echo "Updating CHANGES.md"
