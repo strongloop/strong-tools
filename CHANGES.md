@@ -1,3 +1,21 @@
+2014-11-13, Version 1.2.0
+=========================
+
+ * Annotate release tags with changelog (Ryan Graham)
+
+ * Remove unused second argument to shift (Sam Roberts)
+
+ * Fix incorrect use of backticks (Miroslav Bajtoš)
+
+ * slt-release-finish: use the same tag in all places (Miroslav Bajtoš)
+
+ * slt-release,finish,start: gitflow release tools (Sam Roberts)
+
+ * Add usage to 'slt version' (Ryan Graham)
+
+ * slt-changelog: --version & --sumary work together (Ryan Graham)
+
+
 2014-10-31, Version 1.1.1
 =========================
 
