@@ -16,7 +16,7 @@ echo "Merging release branch to production and tag as $V"
 git checkout production
 git pull --ff-only origin production
 git merge --no-ff --no-edit release/"$V"
-git tag -a "$TAG" -m "$V"
+slt-changelog --summary --version $V | git tag -a "$TAG" -F-
 # Need -D because master has not been pushed to origin/master. If we auto-push,
 # we can change it to --delete, but I think it does no harm to use -D.
 git branch -D release/"$V"
