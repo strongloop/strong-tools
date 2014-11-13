@@ -22,7 +22,7 @@ do
     n)  export SLT_RELEASE_PUBLISH=y;;
   esac
 done
-shift `expr $OPTIND - 1` "$@"
+shift `expr $OPTIND - 1`
 
 if [ "$1" = "" ]
 then
