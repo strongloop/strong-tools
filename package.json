@@ -1,6 +1,6 @@
 {
   "name": "strong-tools",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Package linter from StrongLoop",
   "main": "index.js",
   "scripts": {
