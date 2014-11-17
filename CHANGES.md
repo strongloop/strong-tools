@@ -1,3 +1,9 @@
+2014-11-17, Version 1.2.1
+=========================
+
+ * slt-release-start: fetch origin before branching (Sam Roberts)
+
+
 2014-11-13, Version 1.2.0
 =========================
 
