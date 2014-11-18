@@ -1,7 +1,7 @@
 #!/bin/sh
 
 exec << "___"
-usage: slt-release [-hun] VERSION [FROM]
+usage: slt-release [-hup] VERSION [FROM]
 
 Options:
   h   print this helpful message
