@@ -1,3 +1,11 @@
+2014-11-19, Version 1.3.0
+=========================
+
+ * Fixup README with install and release usage (Sam Roberts)
+
+ * slt-release: change -n to -p, so `-up` updates (Sam Roberts)
+
+
 2014-11-17, Version 1.2.1
 =========================
 
