@@ -1,3 +1,27 @@
+2014-11-25, Version 1.4.0
+=========================
+
+ * slt-release: normalize version prefixes (Ryan Graham)
+
+ * Ensure versions are properly formatted (Ryan Graham)
+
+ * Use sl-blip (Ryan Graham)
+
+ * slt-release: update sl-blip deps if present (Ryan Graham)
+
+ * Add CLI for updating package version (Ryan Graham)
+
+ * Project.optionalDep() for get/set of deps (Ryan Graham)
+
+ * Project.nameVer() to get package@x.y.z (Ryan Graham)
+
+ * Update normalized pkg when raw pkg changes (Ryan Graham)
+
+ * Don't cache target package.json (Ryan Graham)
+
+ * Use tap as test runner (Ryan Graham)
+
+
 2014-11-19, Version 1.3.0
 =========================
 
