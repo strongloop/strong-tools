@@ -12,6 +12,9 @@ set -e
 V=${1:?version is mandatory}
 H=${2:-origin/master}
 
+# Strip leading v if given
+V=${V#v}
+
 echo "Creating release branch 'release/$V' from $H"
 git fetch origin
 git checkout -b release/"$V" "$H"
