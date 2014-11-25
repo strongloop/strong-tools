@@ -10,6 +10,9 @@ fi
 set -e
 
 V=${1:?version is mandatory}
+
+# Ensure V is never prefixed with v, but TAG always is
+V=${V#v}
 TAG="v$V"
 
 echo "Merging release branch to production and tag as $V"

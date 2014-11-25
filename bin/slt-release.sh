@@ -8,7 +8,7 @@ Options:
   u   update the origin with a git push
   p   publish the package to npmjs.org
 
-VERSION must be specified and should be `x.y.z` (with no leading `v`).
+VERSION must be specified and should be `x.y.z`.
 
 FROM is optional, and is where the release branch should start from, the
 default is origin/master.

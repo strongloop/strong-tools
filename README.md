@@ -34,7 +34,7 @@ Options:
   u   update the origin with a git push
   p   publish the package to npmjs.org
 
-VERSION must be specified and should be `x.y.z` (with no leading `v`).
+VERSION must be specified and should be `x.y.z`.
 
 FROM is optional, and is where the release branch should start from, the
 default is origin/master.
@@ -90,3 +90,21 @@ Commands:
   version   Version manipulation
   help      Print this usage guide
 ```
+
+#### slt version
+
+```
+Usage: slt version <CMD> [ARGS]
+
+Commands:
+  inc [PKG...]   Increment version of specified packages
+  inc [VER...]   Increment versions, printing new versions to stdout
+  set VER [PKG]  Set version in PKG, also update sl-blip dep if present
+  help           Display this usage
+```
+
+Currently the only practical `slt version` command is `set`, which operates
+similar to `npm version` with the following major differences:
+ * does **not** commit any changes or create any tags
+ * updates `sl-blip` dependency URL if, and only if, sl-blip is already
+   listed in `optionalDependencies`.
