@@ -43,5 +43,8 @@
   },
   "engine": {
     "ruby": "^2.0.0"
+  },
+  "optionalDependencies": {
+    "sl-blip": "^1.0.0"
   }
 }
