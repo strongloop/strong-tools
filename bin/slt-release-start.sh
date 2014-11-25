@@ -20,11 +20,10 @@ echo "Updating CHANGES.md"
 slt-changelog --version "$V"
 
 echo "Updating package version to $V"
-# XXX(sam) will need to use some other tool, this command fails when version
-# is not changed... and our staging flow sometimes requires the package version
+# XXX(sam) our staging flow sometimes requires the package version
 # to be incremented on master along with the commit that introduced a new
 # feature
-npm version --git-tag-version=false "$V" || /bin/true
+slt version set "$V"
 
 echo "Committing package and CHANGES for v$V"
 git add package.json CHANGES.md
