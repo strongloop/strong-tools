@@ -1,3 +1,9 @@
+2014-11-27, Version 1.4.1
+=========================
+
+ * Mark -p as accepted slt-release option (Ryan Graham)
+
+
 2014-11-25, Version 1.4.0
 =========================
 
