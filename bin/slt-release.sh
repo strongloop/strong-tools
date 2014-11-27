@@ -23,7 +23,7 @@ And if you are comfortable that the results should be pushed and published:
   slt-release -up 1.2.3
 ___
 
-while getopts hnu f
+while getopts hnup f
 do
   case $f in
     h)  cat; exit 0;;
