@@ -24,6 +24,7 @@ function usage($0, p) {
   p('  cla       Create or verify contribution guidelines');
   p('  info      Display metadata about package');
   p('  version   Version manipulation');
+  p('  semver    Wrapper for semver command from semver package');
   p('  help      Print this usage guide');
   p('');
 }
