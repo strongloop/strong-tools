@@ -1,3 +1,13 @@
+2014-11-28, Version 1.5.0
+=========================
+
+ * slt-release: support relative versions (Ryan Graham)
+
+ * slt: add 'semver' as wrapper for isaacs/semver CLI (Ryan Graham)
+
+ * slt: expand 'info' command (Ryan Graham)
+
+
 2014-11-27, Version 1.4.1
 =========================
 
