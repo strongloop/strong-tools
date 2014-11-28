@@ -108,3 +108,17 @@ similar to `npm version` with the following major differences:
  * does **not** commit any changes or create any tags
  * updates `sl-blip` dependency URL if, and only if, sl-blip is already
    listed in `optionalDependencies`.
+
+#### slt info
+
+Some useful utilities for use in shell scripts, such as `slt-release`.
+
+```
+Usage: slt info <CMD> [ARGS]
+
+Commands:
+  name      Print package name
+  version   Print package version
+  repo      Print repo URL
+  help      Display this usage
+```
