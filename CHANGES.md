@@ -1,3 +1,19 @@
+2015-01-28, Version 1.6.0
+=========================
+
+ * slt-stage: only increment patch level (Ryan Graham)
+
+ * Fix bad CLA URL in CONTRIBUTING.md (Ryan Graham)
+
+ * slt cla: read current package by default (Ryan Graham)
+
+ * fix bad CLA URL in template (Ryan Graham)
+
+ * Better error when failing to load package.json (Ryan Graham)
+
+ * Info command to get latest published version (Ryan Graham)
+
+
 2014-11-28, Version 1.5.0
 =========================
 
