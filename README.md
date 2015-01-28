@@ -125,6 +125,7 @@ Usage: slt info <CMD> [ARGS]
 Commands:
   name      Print package name
   version   Print package version
+  released  Print latest version on npmjs.org
   repo      Print repo URL
   help      Display this usage
 ```
