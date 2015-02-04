@@ -39,7 +39,7 @@ end
 current = JSON.load(IO.read('package.json'))
 published = JSON.load(`npm info --json #{current['name']}`) rescue {}
 
-pub_versions = published['versions'] rescue ['0.0.0']
+pub_versions = Array(published['versions']) rescue ['0.0.0']
 cur_ver = ver(current['version'] || '0.0.0')
 compatible_releases = `#{SLT} semver -r ~#{cur_ver.join('.')} #{pub_versions.join(' ')}`.lines.map(&:strip)
 latest = compatible_releases.last || '0.0.0'
