@@ -58,31 +58,12 @@ case $1 in
     fi
 esac
 
-# $1 needs to be replaced with $V
-shift
-
 set -e
 
-# unshift our modified $V as $1
-set -- "$V" "$@"
-
-# bin/slt-release-start.sh
-#!/bin/sh
-
-USAGE="usage: slt-release-start VERSION [FROM]"
-
-if [ "$1" = "" ]; then
-  echo $USAGE
-  exit 1
-fi
-
-set -e
-
-V=${1:?version is mandatory}
-H=${2:-origin/master}
-
-# Strip leading v if given
+# Ensure V is never prefixed with v, but TAG always is
 V=${V#v}
+TAG="v$V"
+H=${2:-origin/master}
 
 echo "Creating release branch 'release/$V' from $H"
 git fetch origin
@@ -101,24 +82,6 @@ echo "Committing package and CHANGES for v$V"
 git add package.json CHANGES.md
 # XXX(sam) commit body should be CHANGES for this release
 git commit -m "v$V"
-
-# bin/slt-release-finish.sh
-#!/bin/sh
-
-USAGE="usage: slt-release-finish VERSION"
-
-if [ "$1" = "" ]; then
-  echo $USAGE
-  exit 1
-fi
-
-set -e
-
-V=${1:?version is mandatory}
-
-# Ensure V is never prefixed with v, but TAG always is
-V=${V#v}
-TAG="v$V"
 
 echo "Merging release branch to production and tag as $V"
 git checkout production
