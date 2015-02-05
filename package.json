@@ -31,8 +31,6 @@
   "bin": {
     "slt": "bin/slt.js",
     "slt-release": "bin/slt-release.sh",
-    "slt-release-finish": "bin/slt-release-finish.sh",
-    "slt-release-start": "bin/slt-release-start.sh",
     "slt-stage": "bin/slt-stage.rb",
     "slt-changelog": "bin/slt-changelog.rb"
   },
