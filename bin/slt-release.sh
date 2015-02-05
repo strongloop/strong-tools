@@ -77,20 +77,11 @@ echo "Updating CHANGES.md"
 slt-changelog --version "$V"
 
 echo "Updating package version to $V"
-# XXX(sam) our staging flow sometimes requires the package version
-# to be incremented on master along with the commit that introduced a new
-# feature
 slt version set "$V"
 
 echo "Committing package and CHANGES for v$V"
 git add package.json CHANGES.md
-# XXX(sam) commit body should be CHANGES for this release
-git commit -m "v$V"
-
-echo "Merging release branch to production and tag as $V"
-git checkout production
-git pull --ff-only origin production
-git merge --no-ff --no-edit release/"$V"
+slt-changelog --summary --version $V | git commit -F-
 slt-changelog --summary --version $V | git tag -a "$TAG" -F-
 
 echo "Checking out starting branch"
@@ -124,10 +115,11 @@ fi
 
 if [ "$SLT_RELEASE_PUBLISH" = "y" ]
 then
-  echo "Publishing to npmjs.org"
+  echo "Publishing to $(npm config get registry)"
+  git checkout "$TAG"
   npm publish
   git checkout "$BASE"
 else
-  echo "Publish to npmjs.org when ready:"
-  echo "  npm publish"
+  echo "Publish to npmjs.com when ready:"
+  echo "  git checkout $TAG && npm publish"
 fi
