@@ -62,5 +62,94 @@ esac
 shift
 
 set -e
-slt-release-start "$V" "$@"
-slt-release-finish "$V" "$@"
+
+# unshift our modified $V as $1
+set -- "$V" "$@"
+
+# bin/slt-release-start.sh
+#!/bin/sh
+
+USAGE="usage: slt-release-start VERSION [FROM]"
+
+if [ "$1" = "" ]; then
+  echo $USAGE
+  exit 1
+fi
+
+set -e
+
+V=${1:?version is mandatory}
+H=${2:-origin/master}
+
+# Strip leading v if given
+V=${V#v}
+
+echo "Creating release branch 'release/$V' from $H"
+git fetch origin
+git checkout -b release/"$V" "$H"
+
+echo "Updating CHANGES.md"
+slt-changelog --version "$V"
+
+echo "Updating package version to $V"
+# XXX(sam) our staging flow sometimes requires the package version
+# to be incremented on master along with the commit that introduced a new
+# feature
+slt version set "$V"
+
+echo "Committing package and CHANGES for v$V"
+git add package.json CHANGES.md
+# XXX(sam) commit body should be CHANGES for this release
+git commit -m "v$V"
+
+# bin/slt-release-finish.sh
+#!/bin/sh
+
+USAGE="usage: slt-release-finish VERSION"
+
+if [ "$1" = "" ]; then
+  echo $USAGE
+  exit 1
+fi
+
+set -e
+
+V=${1:?version is mandatory}
+
+# Ensure V is never prefixed with v, but TAG always is
+V=${V#v}
+TAG="v$V"
+
+echo "Merging release branch to production and tag as $V"
+git checkout production
+git pull --ff-only origin production
+git merge --no-ff --no-edit release/"$V"
+slt-changelog --summary --version $V | git tag -a "$TAG" -F-
+# Need -D because master has not been pushed to origin/master. If we auto-push,
+# we can change it to --delete, but I think it does no harm to use -D.
+git branch -D release/"$V"
+
+echo "Merging production branch to master"
+git checkout master
+git pull --ff-only origin master
+git merge --no-ff --no-edit "$TAG"
+git checkout production
+
+if [ "$SLT_RELEASE_UPDATE" = "y" ]
+then
+  echo "Pushing tag $V and branches production and master to origin"
+  git push origin "$TAG:$TAG" production:production master:master
+else
+  echo "Push tag $TAG and branches production and master to origin when ready:"
+  echo "  git push origin $TAG:$TAG production:production master:master"
+fi
+
+if [ "$SLT_RELEASE_PUBLISH" = "y" ]
+then
+  echo "Publishing to npmjs.org"
+  npm publish
+  git checkout master
+else
+  echo "Publish to npmjs.org when ready:"
+  echo "  npm publish"
+fi
