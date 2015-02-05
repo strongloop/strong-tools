@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require 'date'
 require 'optparse'
 require 'pathname'
 
@@ -9,6 +10,9 @@ class GitRepo
     @sha1 = Hash.new do |cache, ref|
       cache[ref] = `#{git} rev-list -n 1 #{ref}`.strip
     end
+    @date_of = Hash.new do |cache, ref|
+      cache[ref] = DateTime.parse(`#{git} log --date=iso-strict --format="%ad" -n1 '#{ref}'`.strip) #.utc
+    end
   end
 
   def changelog(next_release=false)
@@ -16,59 +20,70 @@ class GitRepo
     # --date-order: order commits by date, not topological order
     base = "#{git} log --full-history --date-order --pretty='format:%s (%an)'"
     releases = []
-    tags = tags_by_date
-    return '' if tags.empty?
-    release_heading = `#{git} log --date=short --format="%ad" -n1 '#{tags.first}'`.strip + ", Version #{clean_version(tags.first)}"
+    tags = tags_by_topo
+
+    # First release doesn't have a full changelog
+    if tags.empty?
+      release_heading = "#{Time.now.utc.strftime("%Y-%m-%d")}, Version #{clean_version(next_release || '0.0.0')}"
+    else
+      release_heading = "#{date_of(tags.first).strftime("%Y-%m-%d")}, Version #{clean_version(tags.first)}"
+    end
     release = []
     release << " * First release!"
     release << "#{release_heading}\n#{'='*release_heading.length}\n"
     releases << release.reverse.join("\n")
+
+    # 2nd, 3rd, etc. releases have changes between them
     tags.each_cons(2) do |a,b|
-      release_heading = `#{git} log --date=short --format="%ad" -n1 '#{b}'`.strip + ", Version #{clean_version(b)}"
+      release_heading = "#{date_of(b).strftime("%Y-%m-%d")}, Version #{clean_version(b)}"
       release = []
       release << changelog_filter(`#{base} '#{sha1(a)}..#{sha1(b)}'`)
       next if release.empty?
       release << "#{release_heading}\n#{'='*release_heading.length}\n"
       releases << release.reverse.join("\n")
     end
-    if next_release
-      last_release = `#{git} rev-list --tags --max-count=1`.strip
-      if sha1('HEAD') != sha1(last_release) and not last_release.empty?
-        release_tag = `#{git} tag --points-at=#{last_release}`.strip
-        release_heading = "#{Time.now.utc.strftime("%Y-%m-%d")}, Version #{clean_version(next_release)}"
-        release = []
-        release << changelog_filter(`#{base} #{last_release}..`)
-        release << "#{release_heading}\n#{'='*release_heading.length}\n" unless release.empty?
-        releases << release.reverse.join("\n") unless release.empty?
-      end
+
+    # Release we are pretending HEAD is
+    if next_release and tags.length > 0 and sha1('HEAD') != sha1(tags.last)
+      release_heading = "#{Time.now.utc.strftime("%Y-%m-%d")}, Version #{clean_version(next_release)}"
+      release = []
+      release << changelog_filter(`#{base} #{sha1(tags.last)}..`)
+      release << "#{release_heading}\n#{'='*release_heading.length}\n" unless release.empty?
+      releases << release.reverse.join("\n") unless release.empty?
     end
     releases.reverse.join("\n\n") + "\n"
   end
 
-  def tags_by_date
-    `#{git} tag`.strip.lines.map(&:strip).sort_by do |tag|
-      `git log -1 --date=short --format=format:%cd #{tag}`.strip
-    end
+  # Tags that are ancestors of HEAD, oldest to newest
+  def tags_by_topo
+    all_tags = `#{git} tag`.strip.lines.map(&:strip)
+    branch_history = `git rev-list --simplify-by-decoration --topo-order HEAD`
+    branch_revs = branch_history.lines.map(&:strip).reverse
+    branch_tags = all_tags.select { |tag|
+      # Filter out tags that are not part of the current branch's history
+      branch_revs.include? sha1(tag)
+    }
+    branch_tags.sort_by { |tag|
+      # sort by the order of the branch_revs list
+      branch_revs.index sha1(tag)
+    }
   end
 
   def latest(version=false)
     # --full-history: include individual commits from merged branches
     # --date-order: order commits by date, not topological order
     base = "#{git} log --full-history --date-order --pretty='format:%s (%an)'"
-    last_release = `#{git} rev-list --tags --max-count=1`.strip
-    if last_release.empty?
-      last_release = `git rev-list --max-parents=0 HEAD`.strip
-    end
-    if sha1('HEAD') != sha1(last_release)
-      release = []
+    last_release = sha1(tags_by_topo.last)
+    release = []
+    if last_release.nil?
+      release << ' * First release!'
+    elsif sha1('HEAD') != sha1(last_release)
       release << changelog_filter(`#{base} #{last_release}..`)
-      if version
-        release << "#{clean_version(version)}\n"
-      end
-      release.reverse.join("\n")
-    else
-      ''
     end
+    if version
+      release << "#{clean_version(version)}\n"
+    end
+    release.reverse.join("\n")
   end
 
   def changelog_filter(log)
@@ -84,10 +99,18 @@ class GitRepo
   end
 
   def sha1(ref)
-    if ref.empty? or ref.nil?
+    if ref.nil? or ref.empty?
       nil
     else
       @sha1[ref]
+    end
+  end
+
+  def date_of(ref)
+    if ref.nil? or ref.empty?
+      nil
+    else
+      @date_of[sha1(ref)]
     end
   end
 
