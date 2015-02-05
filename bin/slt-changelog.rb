@@ -16,7 +16,7 @@ class GitRepo
     # --date-order: order commits by date, not topological order
     base = "#{git} log --full-history --date-order --pretty='format:%s (%an)'"
     releases = []
-    tags = tags_by_date
+    tags = tags_by_topo
     return '' if tags.empty?
     release_heading = `#{git} log --date=short --format="%ad" -n1 '#{tags.first}'`.strip + ", Version #{clean_version(tags.first)}"
     release = []
@@ -45,17 +45,26 @@ class GitRepo
     releases.reverse.join("\n\n") + "\n"
   end
 
-  def tags_by_date
-    `#{git} tag`.strip.lines.map(&:strip).sort_by do |tag|
-      `git log -1 --date=short --format=format:%cd #{tag}`.strip
-    end
+  # Tags that are ancestors of HEAD, oldest to newest
+  def tags_by_topo
+    all_tags = `#{git} tag`.strip.lines.map(&:strip)
+    branch_history = `git rev-list --simplify-by-decoration --topo-order HEAD`
+    branch_revs = branch_history.lines.map(&:strip).reverse
+    branch_tags = all_tags.select { |tag|
+      # Filter out tags that are not part of the current branch's history
+      branch_revs.include? sha1(tag)
+    }
+    branch_tags.sort_by { |tag|
+      # sort by the order of the branch_revs list
+      branch_revs.index sha1(tag)
+    }
   end
 
   def latest(version=false)
     # --full-history: include individual commits from merged branches
     # --date-order: order commits by date, not topological order
     base = "#{git} log --full-history --date-order --pretty='format:%s (%an)'"
-    last_release = `#{git} rev-list --tags --max-count=1`.strip
+    last_release = sha1(tags_by_topo.last)
     if last_release.empty?
       last_release = `git rev-list --max-parents=0 HEAD`.strip
     end
@@ -84,7 +93,7 @@ class GitRepo
   end
 
   def sha1(ref)
-    if ref.empty? or ref.nil?
+    if ref.nil? or ref.empty?
       nil
     else
       @sha1[ref]
