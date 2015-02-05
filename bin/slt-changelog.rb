@@ -65,19 +65,16 @@ class GitRepo
     # --date-order: order commits by date, not topological order
     base = "#{git} log --full-history --date-order --pretty='format:%s (%an)'"
     last_release = sha1(tags_by_topo.last)
-    if last_release.empty?
-      last_release = `git rev-list --max-parents=0 HEAD`.strip
-    end
-    if sha1('HEAD') != sha1(last_release)
-      release = []
+    release = []
+    if last_release.nil?
+      release << ' * First release!'
+    elsif sha1('HEAD') != sha1(last_release)
       release << changelog_filter(`#{base} #{last_release}..`)
-      if version
-        release << "#{clean_version(version)}\n"
-      end
-      release.reverse.join("\n")
-    else
-      ''
     end
+    if version
+      release << "#{clean_version(version)}\n"
+    end
+    release.reverse.join("\n")
   end
 
   def changelog_filter(log)
