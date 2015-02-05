@@ -1,7 +1,7 @@
 #!/bin/sh
 
 exec << "___"
-usage: slt-release [-hup] VERSION [FROM]
+usage: slt-release [-hup] VERSION
 
 Options:
   h   print this helpful message
@@ -12,9 +12,6 @@ VERSION must be specified and should be a valid SemVer version (`x.y.z`)
 or a valid version increment:
   major, minor, patch, premajor, preminor, or prepatch
 
-FROM is optional, and is where the release branch should start from, the
-default is origin/master.
-
 Typical usage, if you want to examine the results before updating github
 and npmjs.org:
 
@@ -23,10 +20,6 @@ and npmjs.org:
 And if you are comfortable that the results should be pushed and published:
 
   slt-release -up 1.2.3
-
-And if you really want to make a patch release quickly:
-
-  slt-release -up patch fix/fix-branch-name
 ___
 
 while getopts hnup f
@@ -63,11 +56,22 @@ set -e
 # Ensure V is never prefixed with v, but TAG always is
 V=${V#v}
 TAG="v$V"
-H=${2:-origin/master}
+MAJOR_V=${V%%.*}
+MAJOR_BR="$MAJOR_V.x-latest"
 
-echo "Creating release branch 'release/$V' from $H"
+# Our starting point, so we can return to that branch when we are done
+# If HEAD is also what we are releasing, we merge it back in.
+if BASE=$(git symbolic-ref --short -q HEAD)
+then
+  echo "Releasing $BASE as $V (tagged as $TAG, updating $MAJOR_BR)..."
+else
+  echo "Detached HEAD detected. You must be on a branch to cut a release"
+  exit 1
+fi
+
+echo "Creating release branch 'release/$V' from $BASE"
 git fetch origin
-git checkout -b release/"$V" "$H"
+git checkout -b release/"$V" "$BASE"
 
 echo "Updating CHANGES.md"
 slt-changelog --version "$V"
@@ -88,30 +92,41 @@ git checkout production
 git pull --ff-only origin production
 git merge --no-ff --no-edit release/"$V"
 slt-changelog --summary --version $V | git tag -a "$TAG" -F-
+
+echo "Checking out starting branch"
+git checkout "$BASE"
+
+echo "Updating $BASE.."
+# --ff: Prefer fast-forward merge, but fallback to real merge if necessary.
+# NOTE: Use release/X here instead of the tag because you can't actually do a
+# fast-forward merge to an annotated tag because it is actually a discrete
+# object and not merely a ref to a commit!
+git merge --ff --no-edit release/"$V"
+
 # Need -D because master has not been pushed to origin/master. If we auto-push,
 # we can change it to --delete, but I think it does no harm to use -D.
 git branch -D release/"$V"
 
-echo "Merging production branch to master"
-git checkout master
-git pull --ff-only origin master
-git merge --no-ff --no-edit "$TAG"
-git checkout production
+# Create or replace a major-version tracking branch (1.x, 2.x, etc.)
+git branch -f "$MAJOR_BR" "$TAG"
 
 if [ "$SLT_RELEASE_UPDATE" = "y" ]
 then
-  echo "Pushing tag $V and branches production and master to origin"
-  git push origin "$TAG:$TAG" production:production master:master
+  echo "Pushing tag $TAG and branches $MAJOR_BR and $BASE to origin"
+  # XXX(rmg) Note the +prefix on the major tracking branch is necessary because
+  # it is a convenience ref, not a real "branch"
+  git push origin $TAG:$TAG $BASE:$BASE +$MAJOR_BR:$MAJOR_BR
 else
-  echo "Push tag $TAG and branches production and master to origin when ready:"
-  echo "  git push origin $TAG:$TAG production:production master:master"
+  echo "Push tag $TAG and branches $MAJOR_BR and $BASE to origin"
+  echo "NOTE: the +prefix is necessary on +$MAJOR_BR:$MAJOR_BR"
+  echo "  git push origin $TAG:$TAG $BASE:$BASE +$MAJOR_BR:$MAJOR_BR"
 fi
 
 if [ "$SLT_RELEASE_PUBLISH" = "y" ]
 then
   echo "Publishing to npmjs.org"
   npm publish
-  git checkout master
+  git checkout "$BASE"
 else
   echo "Publish to npmjs.org when ready:"
   echo "  npm publish"
