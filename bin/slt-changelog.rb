@@ -11,7 +11,7 @@ class GitRepo
       cache[ref] = `#{git} rev-list -n 1 #{ref}`.strip
     end
     @date_of = Hash.new do |cache, ref|
-      cache[ref] = DateTime.parse(`#{git} log --date=iso-strict --format="%ad" -n1 '#{ref}'`.strip) #.utc
+      cache[ref] = DateTime.parse(`#{git} log --date=iso --format="%ad" -n1 '#{ref}'`.strip) #.utc
     end
   end
 
