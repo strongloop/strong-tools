@@ -1,4 +1,26 @@
-2015-01-28, Version 1.6.0
+2015-02-06, Version 2.0.0
+=========================
+
+ * slt-changelog: support older versions of git (Ryan Graham)
+
+ * slt-release: don't update production branch (Ryan Graham)
+
+ * slt-release: replace FROM with multi-branch (Ryan Graham)
+
+ * slt-release: dedupe release start/finish parts (Ryan Graham)
+
+ * slt-release: remove -start and -finish commands (Ryan Graham)
+
+ * slt-changelog: refactor internals (Ryan Graham)
+
+ * slt-changelog: make -s consistent with changelog (Ryan Graham)
+
+ * slt-changelog: use topological order of tags (Ryan Graham)
+
+ * slt-stage: ensure version list is a list (Ryan Graham)
+
+
+2015-01-27, Version 1.6.0
 =========================
 
  * slt-stage: only increment patch level (Ryan Graham)
