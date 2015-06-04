@@ -26,7 +26,8 @@
     "lodash": "^2.4.1",
     "normalize-package-data": "^1.0.3",
     "request": "^2.49.0",
-    "semver": "^4.0.0"
+    "semver": "^4.0.0",
+    "spdx": "^0.4.0"
   },
   "bin": {
     "slt": "bin/slt.js",
