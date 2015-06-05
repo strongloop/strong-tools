@@ -24,6 +24,7 @@
   "dependencies": {
     "gift": "^0.4.3-1",
     "lodash": "^2.4.1",
+    "normalize-license-data": "^1.0.1",
     "normalize-package-data": "^1.0.3",
     "request": "^2.49.0",
     "semver": "^4.0.0",
