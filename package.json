@@ -1,6 +1,6 @@
 {
   "name": "strong-tools",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Package linter from StrongLoop",
   "main": "index.js",
   "scripts": {
@@ -46,6 +46,6 @@
     "ruby": "^2.0.0"
   },
   "optionalDependencies": {
-    "sl-blip": "http://blip.strongloop.com/strong-tools@2.0.0"
+    "sl-blip": "http://blip.strongloop.com/strong-tools@2.1.0"
   }
 }

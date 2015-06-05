@@ -1,3 +1,19 @@
+2015-06-05, Version 2.1.0
+=========================
+
+ * Make change summaries more compact (Ryan Graham)
+
+ * deps: upgrade to tap@1 (Ryan Graham)
+
+ * Update package to use SPDX license expression (Ryan Graham)
+
+ * Fix license linting when license not set (Ryan Graham)
+
+ * Add 'slt info license' command (Ryan Graham)
+
+ * lint: add SPDX validation to package.json linting (Ryan Graham)
+
+
 2015-02-06, Version 2.0.0
 =========================
 
