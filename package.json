@@ -39,7 +39,7 @@
   "devDependencies": {
     "glob": "^4.0.6",
     "rimraf": "^2.2.8",
-    "tap": "git://github.com/strongloop-forks/node-tap#production",
+    "tap": "^1.2.0",
     "tapsert": "^1.0.0"
   },
   "engine": {

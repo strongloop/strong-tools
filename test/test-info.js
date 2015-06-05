@@ -1,6 +1,6 @@
 var assert = require('tapsert');
-var tools = require('../');
 var fmt = require('util').format;
+var tools = require('../');
 
 assert(tools.info, 'info is exported');
 assert(tools.info.cli, 'info.cli is exported');
@@ -8,9 +8,9 @@ assert(tools.info.name, 'info.name is exported');
 assert(tools.info.version, 'info.version is exported');
 assert(tools.info.repo, 'info.repo is exported');
 
-assertOutput('name', ['..'], 'strong-tools');
-assertOutput('repo', ['..'], 'strongloop/strong-tools');
-assertOutput('version', ['..'], /\d+\.\d+\.\d+/);
+assertOutput('name', ['.'], 'strong-tools');
+assertOutput('repo', ['.'], 'strongloop/strong-tools');
+assertOutput('version', ['.'], /\d+\.\d+\.\d+/);
 
 function assertOutput(fn, args, output) {
   tools.info.cli.out = fmtAssert;
