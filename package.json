@@ -16,7 +16,7 @@
     "init"
   ],
   "author": "Ryan Graham <ryan@strongloop.com>",
-  "license": "Artistic 2.0",
+  "license": "Artistic-2.0",
   "bugs": {
     "url": "https://github.com/strongloop/strong-lint/issues"
   },
