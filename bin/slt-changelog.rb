@@ -11,14 +11,14 @@ class GitRepo
       cache[ref] = `#{git} rev-list -n 1 #{ref}`.strip
     end
     @date_of = Hash.new do |cache, ref|
-      cache[ref] = DateTime.parse(`#{git} log --date=iso --format="%ad" -n1 '#{ref}'`.strip) #.utc
+      cache[ref] = DateTime.parse(`#{git} log --date=iso --format="%ad" -n1 "#{ref}"`.strip) #.utc
     end
   end
 
   def changelog(next_release=false)
     # --full-history: include individual commits from merged branches
     # --date-order: order commits by date, not topological order
-    base = "#{git} log --full-history --date-order --pretty='format:%s (%an)'"
+    base = "#{git} log --full-history --date-order --pretty=\"format:%s (%an)\""
     releases = []
     tags = tags_by_topo
 
@@ -37,7 +37,7 @@ class GitRepo
     tags.each_cons(2) do |a,b|
       release_heading = "#{date_of(b).strftime("%Y-%m-%d")}, Version #{clean_version(b)}"
       release = []
-      release << changelog_filter(`#{base} '#{sha1(a)}..#{sha1(b)}'`).join("\n")
+      release << changelog_filter(`#{base} "#{sha1(a)}..#{sha1(b)}"`).join("\n")
       next if release.empty?
       release << "#{release_heading}\n#{'='*release_heading.length}\n"
       releases << release.reverse.join("\n")
@@ -72,7 +72,7 @@ class GitRepo
   def latest(version=false)
     # --full-history: include individual commits from merged branches
     # --date-order: order commits by date, not topological order
-    base = "#{git} log --full-history --date-order --pretty='format:%s (%an)'"
+    base = "#{git} log --full-history --date-order --pretty=\"format:%s (%an)\""
     last_release = sha1(tags_by_topo.last)
     release = []
     if last_release.nil?
