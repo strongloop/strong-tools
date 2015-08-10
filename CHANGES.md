@@ -1,3 +1,9 @@
+2015-08-10, Version 2.1.1
+=========================
+
+ * slt-changelog: fix for Windows (Miroslav Bajtoš)
+
+
 2015-06-05, Version 2.1.0
 =========================
 
