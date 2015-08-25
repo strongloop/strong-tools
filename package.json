@@ -1,14 +1,14 @@
 {
   "name": "strong-tools",
   "version": "2.1.1",
-  "description": "Package linter from StrongLoop",
+  "description": "Package maintenance tools from StrongLoop",
   "main": "index.js",
   "scripts": {
     "test": "tap test/test-*"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:strongloop/strong-lint.git"
+    "url": "git@github.com:strongloop/strong-tools.git"
   },
   "keywords": [
     "lint",
@@ -18,9 +18,9 @@
   "author": "Ryan Graham <ryan@strongloop.com>",
   "license": "Artistic-2.0",
   "bugs": {
-    "url": "https://github.com/strongloop/strong-lint/issues"
+    "url": "https://github.com/strongloop/strong-tools/issues"
   },
-  "homepage": "https://github.com/strongloop/strong-lint",
+  "homepage": "https://github.com/strongloop/strong-tools",
   "dependencies": {
     "gift": "^0.4.3-1",
     "lodash": "^2.4.1",
