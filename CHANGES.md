@@ -1,3 +1,9 @@
+2015-08-26, Version 2.1.2
+=========================
+
+ * update package metadata (Ryan Graham)
+
+
 2015-08-10, Version 2.1.1
 =========================
 
