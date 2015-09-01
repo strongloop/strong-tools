@@ -4,7 +4,8 @@
   "description": "Package maintenance tools from StrongLoop",
   "main": "index.js",
   "scripts": {
-    "test": "tap test/test-*"
+    "test": "tap --coverage --coverage-report=cobertura test/test-*",
+    "posttest": "tap --coverage-report=text"
   },
   "repository": {
     "type": "git",
