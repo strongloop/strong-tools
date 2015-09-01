@@ -1,3 +1,13 @@
+2015-09-01, Version 2.2.0
+=========================
+
+ * slt-stage: increment pre-releases if detected (Ryan Graham)
+
+ * test: add coverage reporting (Ryan Graham)
+
+ * deps: ugprade to latest deps (Ryan Graham)
+
+
 2015-08-26, Version 2.1.2
 =========================
 
