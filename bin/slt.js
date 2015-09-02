@@ -20,13 +20,16 @@ function usage($0, p) {
   p('Usage: %s <CMD> [PKG]', $0);
   p('');
   p('Commands:');
-  p('  lint      Perform a simple linting of the given package.json');
-  p('  cla       Create or verify contribution guidelines');
-  p('  info      Display metadata about package');
-  p('  version   Version manipulation');
-  p('  semver    Wrapper for semver command from semver package');
-  p('  help      Print this usage guide');
+  p('  lint        Perform a simple linting of the given package.json');
+  p('  cla         Create or verify contribution guidelines');
+  p('  license     Set package licensing');
+  p('  info        Display metadata about package');
+  p('  version     Version manipulation');
+  p('  semver      Wrapper for semver command from semver package');
+  p('  help        Print this usage guide');
   p('');
+  p('Confirm license changes are acceptable with:');
+  p('    git diff -M --cached -w --ignore-blank-lines');
 }
 
 function defaultCLI(fn, pkgPath) {
