@@ -1,4 +1,4 @@
-Copyright (c) 2013-2015 StrongLoop, Inc.
+Copyright (c) 2013-2015 StrongLoop, Inc<%= others %>.
 
 <%= name %> uses a 'dual license' model. Users may use
 <%= name %> under the terms of the MIT license, or under the
