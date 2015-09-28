@@ -1,3 +1,19 @@
+2015-09-28, Version 2.3.0
+=========================
+
+ * add eslint as pretest (Ryan Graham)
+
+ * remove whitespaces (Anthony Ettinger)
+
+ * Add version bump for bower.json files (Anthony Ettinger)
+
+ * fix crash on node-v0.10 (Ryan Graham)
+
+ * Add fix-license command (Sam Roberts)
+
+ * Use strongloop conventions for licensing (Sam Roberts)
+
+
 2015-09-01, Version 2.2.0
 =========================
 
