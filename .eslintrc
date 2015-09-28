@@ -1,0 +1,13 @@
+{
+	"env": {
+		"node": true
+	},
+	"extends": "eslint:recommended",
+	"rules": {
+		"comma-dangle": 0,
+		"no-extra-semi": 2,
+		"valid-jsdoc": 2,
+		"no-unexpected-multiline": 2,
+		"no-console": 0
+	}
+}

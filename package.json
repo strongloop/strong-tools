@@ -4,6 +4,7 @@
   "description": "Package maintenance tools from StrongLoop",
   "main": "index.js",
   "scripts": {
+    "pretest": "eslint --ignore-path .gitignore ./",
     "test": "tap --coverage --coverage-report=cobertura test/test-*",
     "posttest": "tap --coverage-report=text"
   },
@@ -40,6 +41,7 @@
     "slt-changelog": "bin/slt-changelog.rb"
   },
   "devDependencies": {
+    "eslint": "^1.5.1",
     "rimraf": "^2.2.8",
     "tap": "^1.2.0",
     "tapsert": "^1.0.0"

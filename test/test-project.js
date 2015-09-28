@@ -31,5 +31,6 @@ assert.strictEqual(p1.version(), '1.0.0-0',
 p1.version(p1.version());
 p1.persist();
 var updated = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
+assert.notEqual(updated, original, 'file has changed');
 assert.strictEqual(updated.version, '1.0.0-0',
                    'persists the updated version');
