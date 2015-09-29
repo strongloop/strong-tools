@@ -1,6 +1,6 @@
 {
   "name": "strong-tools",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "Package maintenance tools from StrongLoop",
   "main": "index.js",
   "scripts": {
@@ -50,6 +50,6 @@
     "ruby": "^2.0.0"
   },
   "optionalDependencies": {
-    "sl-blip": "http://blip.strongloop.com/strong-tools@2.3.0"
+    "sl-blip": "http://blip.strongloop.com/strong-tools@2.4.0"
   }
 }

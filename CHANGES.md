@@ -1,3 +1,13 @@
+2015-09-29, Version 2.4.0
+=========================
+
+ * Lint license source (Sam Roberts)
+
+ * Support non-dual licensing, and setting license (Sam Roberts)
+
+ * Persist others in copyright statement (Sam Roberts)
+
+
 2015-09-28, Version 2.3.0
 =========================
 
