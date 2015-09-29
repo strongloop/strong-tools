@@ -22,7 +22,9 @@ function usage($0, p) {
   p('Commands:');
   p('  lint        Perform a simple linting of the given package.json');
   p('  cla         Create or verify contribution guidelines');
-  p('  license     Set package licensing');
+  p('  license [F] Set package licensing to standard form F');
+  p('    Form is auto-detected by default, it can be set explicitly to one of:');
+  p('      --mit, --dual-mit, --artistic, --dual-artistic, or --strongloop');
   p('  info        Display metadata about package');
   p('  version     Version manipulation');
   p('  semver      Wrapper for semver command from semver package');
