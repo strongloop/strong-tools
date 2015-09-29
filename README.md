@@ -129,3 +129,14 @@ Commands:
   repo      Print repo URL
   help      Display this usage
 ```
+
+#### slt license
+
+> Node 0.12 or higher is required for this command to work.
+
+##### Generate a license
+
+```
+cd path/to/your/project
+slt license
+```
