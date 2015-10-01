@@ -1,3 +1,11 @@
+2015-10-01, Version 2.5.0
+=========================
+
+ * Add slt license usage to README.md (Simon Ho)
+
+ * license: use sync-exec for portability (Sam Roberts)
+
+
 2015-09-29, Version 2.4.0
 =========================
 
