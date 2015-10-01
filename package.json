@@ -32,7 +32,8 @@
     "normalize-package-data": "^2.3.2",
     "request": "^2.49.0",
     "semver": "^5.0.1",
-    "spdx": "^0.4.0"
+    "spdx": "^0.4.0",
+    "sync-exec": "^0.6.2"
   },
   "bin": {
     "slt": "bin/slt.js",

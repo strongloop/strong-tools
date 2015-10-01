@@ -129,3 +129,22 @@ Commands:
   repo      Print repo URL
   help      Display this usage
 ```
+
+#### slt license
+
+##### Re-generate current license in standard form
+
+Current license is auto-detected from contents of package.json and any existing LICENSE
+or LICENSE.md file.
+
+```
+cd path/to/your/project
+slt license
+```
+
+##### Set the license to a standard form
+
+No auto-detection:
+- slt license --mit/--dual-mit/--strongloop/--dual-artistic
+
+Note: --artistic not supported yet.

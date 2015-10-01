@@ -5,10 +5,7 @@ module.exports = {
   cla: require('./lib/cla'),
   Project: require('./lib/project'),
   info: require('./lib/info'),
+  license:  require('./lib/license'),
   version: require('./lib/version'),
   semver: wrapped('semver/bin/semver'),
 };
-
-if (require('child_process').execSync) {
-  module.exports.license =  require('./lib/license');
-}
