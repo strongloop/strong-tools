@@ -1,0 +1,15 @@
+Usage: <%= $0 %> <CMD> [PKG]
+
+Commands:
+  lint        Perform a simple linting of the given package.json
+  cla         Create or verify contribution guidelines
+  license [F] Set package licensing to standard form F
+      Form is auto-detected by default, it can be set explicitly to one of:
+      --mit, --dual-mit, --artistic, --dual-artistic, or --strongloop
+  info        Display metadata about package
+  version     Version manipulation
+  semver      Wrapper for semver command from semver package
+  help        Print this usage guide
+
+Confirm license changes are acceptable with:
+    git diff -M --cached -w --ignore-blank-lines
