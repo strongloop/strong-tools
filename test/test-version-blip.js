@@ -25,7 +25,7 @@ var withBlip = {
   name: 'testing',
   optionalDependencies: {
     'sl-blip': '*',
-  }
+  },
 };
 fs.writeFileSync(SANDBOX_PKG, JSON.stringify(withBlip), 'utf8');
 original = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
