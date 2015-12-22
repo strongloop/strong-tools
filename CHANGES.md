@@ -1,3 +1,13 @@
+2015-12-22, Version 3.0.0
+=========================
+
+ * Re-license as StrongLoop (Sam Roberts)
+
+ * Check for changes in bower package file (Joseph Tary)
+
+ * Refer to licenses via HREF, not inline. (Sam Roberts)
+
+
 2015-10-01, Version 2.5.0
 =========================
 
