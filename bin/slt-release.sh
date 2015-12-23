@@ -78,6 +78,7 @@ slt-changelog --version "$V"
 
 echo "Updating package version to $V"
 slt version set "$V"
+git add $(git ls-files ../scripts/sl-blip.js)
 
 echo "Committing package and CHANGES for v$V"
 git add $(git ls-files bower.json) package.json CHANGES.md
