@@ -34,7 +34,7 @@ tools.version.cli.out = function() {};
 var original = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
 tools.version.cli('inc', SANDBOX_PKG);
 var updated = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
-assert(original.version != updated.version,
+assert(original.version !== updated.version,
        '-- should change version in package');
 assert.strictEqual(updated.version, '1.0.0-10.aaaabbb',
                    '-- should increment missing version to 1.0.0-1');

@@ -5,7 +5,7 @@ module.exports = {
   cla: require('./lib/cla'),
   Project: require('./lib/project'),
   info: require('./lib/info'),
-  license:  require('./lib/license'),
+  license: require('./lib/license'),
   version: require('./lib/version'),
   semver: wrapped('semver/bin/semver'),
 };

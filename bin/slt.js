@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+var _ = require('lodash');
+var fs = require('fs');
 var path = require('path');
 var tools = require('../');
 
@@ -17,21 +19,9 @@ if (cmd in tools) {
 }
 
 function usage($0, p) {
-  p('Usage: %s <CMD> [PKG]', $0);
-  p('');
-  p('Commands:');
-  p('  lint        Perform a simple linting of the given package.json');
-  p('  cla         Create or verify contribution guidelines');
-  p('  license [F] Set package licensing to standard form F');
-  p('    Form is auto-detected by default, it can be set explicitly to one of:');
-  p('      --mit, --dual-mit, --artistic, --dual-artistic, or --strongloop');
-  p('  info        Display metadata about package');
-  p('  version     Version manipulation');
-  p('  semver      Wrapper for semver command from semver package');
-  p('  help        Print this usage guide');
-  p('');
-  p('Confirm license changes are acceptable with:');
-  p('    git diff -M --cached -w --ignore-blank-lines');
+  var usageFile = path.resolve(__dirname, 'slt.ejs');
+  var generateUsage = _.template(fs.readFileSync(usageFile, 'utf8'));
+  p(generateUsage({$0: $0}));
 }
 
 function defaultCLI(fn, pkgPath) {
