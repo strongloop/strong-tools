@@ -88,7 +88,7 @@ function gitChangelog(nextVersion) {
     var sha1b = gitSha1(b);
     var cmd = Promise.resolve(base + ' "%s..%s"');
     var entries = Promise.join(cmd, sha1a, sha1b, git)
-      .then(changelogFilter(b)) // should be cleanVersion(b)
+      .then(changelogFilter(cleanVersion(b)))
       .then(function(lines) {
         return lines.join('\n');
       });
@@ -178,7 +178,7 @@ function changelogFilter(tagName) {
   function filter(log) {
     return _(log)
       .reject(function(line) {
-        return _.startsWith(line, tagName);
+        return _.startsWith(line, tagName + ' (');
       })
       .reject(matching(/^Merge/))
       .reject(matching(/^v?\d+\.\d+\.\d+ \(/))
