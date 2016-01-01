@@ -39,7 +39,7 @@
     "slt": "bin/slt.js",
     "slt-release": "bin/slt-release.sh",
     "slt-stage": "bin/slt-stage.rb",
-    "slt-changelog": "bin/slt-changelog.rb"
+    "slt-changelog": "bin/slt-changelog.js"
   },
   "devDependencies": {
     "eslint": "^1.10.0",

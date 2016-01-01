@@ -11,7 +11,8 @@ class GitRepo
       cache[ref] = `#{git} rev-list -n 1 #{ref}`.strip
     end
     @date_of = Hash.new do |cache, ref|
-      cache[ref] = DateTime.parse(`#{git} log --date=iso --format="%ad" -n1 "#{ref}"`.strip) #.utc
+      d = `#{git} log --date=iso --format="%ad" -n1 "#{ref}"`.strip
+      cache[ref] = d.split(' ')[0]
     end
   end
 
@@ -26,7 +27,7 @@ class GitRepo
     if tags.empty?
       release_heading = "#{Time.now.utc.strftime("%Y-%m-%d")}, Version #{clean_version(next_release || '0.0.0')}"
     else
-      release_heading = "#{date_of(tags.first).strftime("%Y-%m-%d")}, Version #{clean_version(tags.first)}"
+      release_heading = "#{date_of(tags.first)}, Version #{clean_version(tags.first)}"
     end
     release = []
     release << " * First release!"
@@ -35,9 +36,9 @@ class GitRepo
 
     # 2nd, 3rd, etc. releases have changes between them
     tags.each_cons(2) do |a,b|
-      release_heading = "#{date_of(b).strftime("%Y-%m-%d")}, Version #{clean_version(b)}"
+      release_heading = "#{date_of(b)}, Version #{clean_version(b)}"
       release = []
-      release << changelog_filter(`#{base} "#{sha1(a)}..#{sha1(b)}"`).join("\n")
+      release << changelog_filter(clean_version(b), `#{base} "#{sha1(a)}..#{sha1(b)}"`).join("\n")
       next if release.empty?
       release << "#{release_heading}\n#{'='*release_heading.length}\n"
       releases << release.reverse.join("\n")
@@ -47,7 +48,7 @@ class GitRepo
     if next_release and tags.length > 0 and sha1('HEAD') != sha1(tags.last)
       release_heading = "#{Time.now.utc.strftime("%Y-%m-%d")}, Version #{clean_version(next_release)}"
       release = []
-      release << changelog_filter(`#{base} #{sha1(tags.last)}..`).join("\n")
+      release << changelog_filter(clean_version(next_release), `#{base} #{sha1(tags.last)}..`).join("\n")
       release << "#{release_heading}\n#{'='*release_heading.length}\n" unless release.empty?
       releases << release.reverse.join("\n") unless release.empty?
     end
@@ -78,7 +79,7 @@ class GitRepo
     if last_release.nil?
       release << ' * First release!'
     elsif sha1('HEAD') != sha1(last_release)
-      release << changelog_filter(`#{base} #{last_release}..`).join
+      release << changelog_filter(version, `#{base} #{last_release}..`).join
     end
     if version
       release << "#{clean_version(version)}\n\n"
@@ -86,9 +87,10 @@ class GitRepo
     release.reverse.join
   end
 
-  def changelog_filter(log)
+  def changelog_filter(v, log)
     log.lines
        .map(&:strip)
+       .reject { |line| line.start_with?(v + ' (') }
        .reject { |line| line =~ /^Merge/ }
        .reject { |line| line =~ /^v?\d+\.\d+\.\d+ \(/ }
        .reject { |line| line =~ /update changes.md/i }
