@@ -1,3 +1,31 @@
+2016-01-05, Version 3.1.0
+=========================
+
+ * add missing dependencies: bluebird, minimist (Ryan Graham)
+
+ * ensure blip script is added to repo during release (Ryan Graham)
+
+ * update blip script with package persistence (Ryan Graham)
+
+ * replace blip dep with blip script (Ryan Graham)
+
+ * refactor: move blip updating in to Project (Ryan Graham)
+
+ * filter out more version commits (Ryan Graham)
+
+ * use JS version of slt-changelog as bin cmd (Ryan Graham)
+
+ * add JS implementation of slt-changelog (Ryan Graham)
+
+ * simplify changelog date parsing (Ryan Graham)
+
+ * restore standard eslint ignore rules (Ryan Graham)
+
+ * move usage text to external template (Ryan Graham)
+
+ * switch to eslint-config-strongloop (Ryan Graham)
+
+
 2015-12-22, Version 3.0.0
 =========================
 
