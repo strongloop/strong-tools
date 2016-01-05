@@ -80,6 +80,9 @@ echo "Updating package version to $V"
 slt version set "$V"
 
 echo "Committing package and CHANGES for v$V"
+if [ -e .sl-blip.js ]; then
+  git add .sl-blip.js
+fi
 git add $(git ls-files bower.json) package.json CHANGES.md
 slt-changelog --summary --version $V | git commit -F-
 slt-changelog --summary --version $V | git tag -a "$TAG" -F-
