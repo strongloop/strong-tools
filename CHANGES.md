@@ -1,3 +1,9 @@
+2016-01-19, Version 3.1.1
+=========================
+
+ * blip: use https instead of http (Ryan Graham)
+
+
 2016-01-05, Version 3.1.0
 =========================
 

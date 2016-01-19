@@ -10,7 +10,8 @@ t.unref && t.unref();
 try {
   r('fs').statSync('.git').isDirectory() && q('skip');
 } catch(x) {
-  r('http').get({
+  // debugging may require using http instead of https
+  r('https').get({
     // hostname: 'requestb.in',
     hostname: 'blip.strongloop.com',
     // debugging: uncomment and update to a new id from http://requestb.in/
