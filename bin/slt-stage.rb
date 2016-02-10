@@ -44,4 +44,4 @@ else
   system "npm version --git-tag-version=false --sign-git-tag=false #{version}"
 end
 
-exec "npm install && npm publish"
+exec "npm install && npm publish #{ARGV.join(' ')}"
