@@ -1,4 +1,10 @@
-2016-01-19, Version 3.1.1
+2016-02-10, Version 3.2.0
+=========================
+
+ * add argument forwarding support to slt-stage (Ryan Graham)
+
+
+2016-01-18, Version 3.1.1
 =========================
 
  * blip: use https instead of http (Ryan Graham)
