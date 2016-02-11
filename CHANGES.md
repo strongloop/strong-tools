@@ -1,3 +1,9 @@
+2016-02-11, Version 3.2.1
+=========================
+
+ * change blip script to not depend on node (Ryan Graham)
+
+
 2016-02-10, Version 3.2.0
 =========================
 

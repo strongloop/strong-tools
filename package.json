@@ -1,13 +1,13 @@
 {
   "name": "strong-tools",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": "Package maintenance tools from StrongLoop",
   "main": "index.js",
   "scripts": {
     "pretest": "eslint --ignore-path .gitignore ./",
     "test": "tap --coverage --coverage-report=cobertura test/test-*",
     "posttest": "tap --coverage-report=text",
-    "preinstall": "node .sl-blip.js"
+    "preinstall": "node .sl-blip.js || exit 0"
   },
   "repository": {
     "type": "git",
