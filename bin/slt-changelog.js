@@ -21,7 +21,7 @@ return Promise.resolve(minimist(ARGS, OPTS)).then(function(opts) {
     return writeFile(opts._[0] || 'CHANGES.md', log);
   });
 }).catch(function(err) {
-  console.error('Error fulfilling request:', err);
+  console.error('Error fulfilling request:', err.stack);
 });
 
 function gitLatest(version) {
