@@ -121,6 +121,9 @@ function gitChangelog(nextVersion) {
 }
 
 function gitSha1(ref) {
+  if (!ref) {
+    return Promise.resolve(null);
+  }
   return git('rev-list -n 1 %s', ref)
     .then(_.first)
     .then(strip);
