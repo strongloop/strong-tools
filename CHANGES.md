@@ -1,3 +1,11 @@
+2016-02-18, Version 3.2.2
+=========================
+
+ * Fix handling of null refs (Ryan Graham)
+
+ * Give more developer-friendly errors (Ryan Graham)
+
+
 2016-02-11, Version 3.2.1
 =========================
 
