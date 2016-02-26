@@ -73,7 +73,7 @@ function gitChangelog(nextVersion) {
     var t, v;
     if (_.isEmpty(tags)) {
       t = Promise.resolve(TODAY);
-      v = Promise.resolve(cleanVersion(nextRelease || '0.0.0'));
+      v = Promise.resolve(cleanVersion(nextVersion || '0.0.0'));
     } else {
       t = gitDateOf(_.first(tags));
       v = Promise.resolve(cleanVersion(_.first(tags)));
