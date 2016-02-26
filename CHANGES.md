@@ -1,4 +1,10 @@
-2016-02-18, Version 3.2.2
+2016-02-26, Version 3.2.3
+=========================
+
+ * fix JS version of changelog generator (Ryan Graham)
+
+
+2016-02-17, Version 3.2.2
 =========================
 
  * Fix handling of null refs (Ryan Graham)
