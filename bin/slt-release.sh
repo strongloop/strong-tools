@@ -57,19 +57,18 @@ set -e
 V=${V#v}
 TAG="v$V"
 MAJOR_V=${V%%.*}
-MAJOR_BR="$MAJOR_V.x-latest"
 
 # Our starting point, so we can return to that branch when we are done
 # If HEAD is also what we are releasing, we merge it back in.
 if BASE=$(git symbolic-ref --short -q HEAD)
 then
-  echo "Releasing $BASE as $V (tagged as $TAG, updating $MAJOR_BR)..."
+  echo "Releasing $BASE as $V (tagged as $TAG)..."
 else
   echo "Detached HEAD detected. You must be on a branch to cut a release"
   exit 1
 fi
 
-echo "Creating release branch 'release/$V' from $BASE"
+echo "Creating temporary local release branch 'release/$V' from $BASE"
 git fetch origin
 git checkout -b release/"$V" "$BASE"
 
@@ -101,19 +100,13 @@ git merge --ff --no-edit release/"$V"
 # we can change it to --delete, but I think it does no harm to use -D.
 git branch -D release/"$V"
 
-# Create or replace a major-version tracking branch (1.x, 2.x, etc.)
-git branch -f "$MAJOR_BR" "$TAG"
-
 if [ "$SLT_RELEASE_UPDATE" = "y" ]
 then
-  echo "Pushing tag $TAG and branches $MAJOR_BR and $BASE to origin"
-  # XXX(rmg) Note the +prefix on the major tracking branch is necessary because
-  # it is a convenience ref, not a real "branch"
-  git push origin $TAG:$TAG $BASE:$BASE +$MAJOR_BR:$MAJOR_BR
+  echo "Pushing tag $TAG and branch $BASE to origin"
+  git push origin $TAG:$TAG $BASE:$BASE
 else
-  echo "Push tag $TAG and branches $MAJOR_BR and $BASE to origin"
-  echo "NOTE: the +prefix is necessary on +$MAJOR_BR:$MAJOR_BR"
-  echo "  git push origin $TAG:$TAG $BASE:$BASE +$MAJOR_BR:$MAJOR_BR"
+  echo "Push tag $TAG and branche $BASE to origin"
+  echo "  git push origin $TAG:$TAG $BASE:$BASE"
 fi
 
 if [ "$SLT_RELEASE_PUBLISH" = "y" ]
