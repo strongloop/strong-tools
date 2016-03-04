@@ -1,6 +1,6 @@
 {
   "name": "strong-tools",
-  "version": "3.2.3",
+  "version": "4.0.0",
   "description": "Package maintenance tools from StrongLoop",
   "main": "index.js",
   "scripts": {

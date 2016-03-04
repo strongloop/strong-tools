@@ -1,4 +1,8 @@
-Copyright (c) 2013-2015 StrongLoop, Inc.
+Copyright (c) <%= owner %> <%= years %>. All Rights Reserved.
+Node module: <%= name %>
+This project is licensed under the MIT License, full text below.
+
+--------
 
 MIT license
 
