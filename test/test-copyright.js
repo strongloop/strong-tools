@@ -1,5 +1,7 @@
-var test = require('tap').test;
 var copyright = require('../lib/copyright');
+var fs = require('fs');
+var path = require('path');
+var test = require('tap').test;
 
 test('copyright years', function(t) {
   t.test('entire strong-tools package', function(t) {
@@ -42,6 +44,30 @@ test('copyright headers', function(t) {
       t.match(header, 'US Government Users Restricted Rights');
       t.match(header, 'Use, duplication or disclosure');
       t.match(header, 'restricted by GSA ADP Schedule Contract with IBM Corp.');
+    });
+  });
+  t.end();
+});
+
+test('header updating', function(t) {
+  var fakeFile = path.resolve(__dirname, 'fake.js');
+  var fakeJS = 'console.log("hello");\n';
+  fs.writeFileSync(fakeFile, fakeJS, 'utf8');
+
+  t.test('when no header exists', function(t) {
+    return copyright.ensure(fakeFile, 'MIT').then(function(contents) {
+      var latest = fs.readFileSync(fakeFile, 'utf8');
+      t.match(contents, fakeJS, 'should contain original content');
+      t.equal(contents, latest, 'should update the file as well as return it');
+    });
+  });
+  t.test('when header already exists', function(t) {
+    var alreadySet = fs.readFileSync(fakeFile, 'utf8');
+    return copyright.ensure(fakeFile, 'MIT').then(function(contents) {
+      var latest = fs.readFileSync(fakeFile, 'utf8');
+      t.match(contents, fakeJS, 'should contain original content');
+      t.equal(contents, latest, 'should update the file as well as return it');
+      t.equal(contents, alreadySet, 'should be idempotent');
     });
   });
   t.end();
