@@ -26,14 +26,14 @@ test('copyright headers', function(t) {
     return copyright.header(__filename, 'MIT').then(function(header) {
       testCopyrightStatement(t, header);
       t.match(header, 'MIT License');
-      t.match(header, 'at http://some-url/');
+      t.match(header, /at https:.+MIT$/);
     });
   });
   t.test('Artistic license', function(t) {
     return copyright.header(__filename, 'Artistic').then(function(header) {
       testCopyrightStatement(t, header);
       t.match(header, 'Artistic License 2.0');
-      t.match(header, 'in LICENSE.md');
+      t.match(header, /at https:.+Artistic-2.0$/);
     });
   });
   t.test('Commercial license', function(t) {
