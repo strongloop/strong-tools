@@ -73,6 +73,59 @@ test('header updating', function(t) {
   t.end();
 });
 
+test('shebang handling', function(t) {
+  var fakeFile = path.resolve(__dirname, 'fake.js');
+  var fakeJS = 'console.log("hello");\n';
+  var fakeContent = '#!/usr/bin/env node\n\n' + fakeJS;
+  fs.writeFileSync(fakeFile, fakeContent, 'utf8');
+
+  t.test('when no header exists', function(t) {
+    return copyright.ensure(fakeFile, 'MIT').then(function(contents) {
+      var latest = fs.readFileSync(fakeFile, 'utf8');
+      t.match(contents, fakeJS, 'should contain original content');
+      t.equal(contents, latest, 'should update the file as well as return it');
+    });
+  });
+  t.test('when header already exists', function(t) {
+    var alreadySet = fs.readFileSync(fakeFile, 'utf8');
+    return copyright.ensure(fakeFile, 'MIT').then(function(contents) {
+      var latest = fs.readFileSync(fakeFile, 'utf8');
+      t.match(contents, fakeJS, 'should contain original content');
+      t.equal(contents, latest, 'should update the file as well as return it');
+      t.equal(contents, alreadySet, 'should be idempotent');
+    });
+  });
+  t.end();
+});
+
+test('relicense header', function(t) {
+  var fakeFile = path.resolve(__dirname, 'fake.js');
+  var fakeJS = 'console.log("hello");\n';
+  var fakeContent = '#!/usr/bin/env node\n\n' + fakeJS;
+  fs.writeFileSync(fakeFile, fakeContent, 'utf8');
+
+  t.test('when no header exists', function(t) {
+    return copyright.ensure(fakeFile, 'MIT').then(function(contents) {
+      var latest = fs.readFileSync(fakeFile, 'utf8');
+      t.match(contents, fakeJS, 'should contain original content');
+      t.match(contents, /MIT/, 'should mention new license');
+      t.equal(contents, latest, 'should update the file as well as return it');
+    });
+  });
+  t.test('when header already exists', function(t) {
+    var alreadySet = fs.readFileSync(fakeFile, 'utf8');
+    return copyright.ensure(fakeFile, 'Artistic').then(function(contents) {
+      var latest = fs.readFileSync(fakeFile, 'utf8');
+      t.match(contents, fakeJS, 'should contain original content');
+      t.notEqual(contents, alreadySet, 'should be modified');
+      t.equal(contents, latest, 'should update the file as well as return it');
+      t.notMatch(contents, /MIT/, 'should not mention previous license');
+      t.match(contents, /Artistic/, 'should mention new license');
+    });
+  });
+  t.end();
+});
+
 function testCopyrightStatement(t, str) {
   t.match(str, /Licensed Materials - Property of IBM$/m);
   t.match(str, /Copyright IBM Corp\. \d{4}(,\d{4})*\. All Rights Reserved\.$/m);
