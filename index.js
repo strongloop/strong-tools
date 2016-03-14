@@ -8,4 +8,5 @@ module.exports = {
   license: require('./lib/license'),
   version: require('./lib/version'),
   semver: wrapped('semver/bin/semver'),
+  copyright: require('./lib/copyright'),
 };
