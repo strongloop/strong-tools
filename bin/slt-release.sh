@@ -113,6 +113,13 @@ if [ "$SLT_RELEASE_PUBLISH" = "y" ]
 then
   echo "Publishing to $(npm config get registry)"
   git checkout "$TAG"
+  # npm uses .gitignore if there is no .npmignore, so we'll use that as
+  # our starting point if there isn't already a .npmigore file
+  if [[ ! -f ".npmignore" ]]; then
+    cp .gitignore .npmignore
+  fi
+  # ignore the entire test tree
+  echo "test" >> .npmignore
   npm publish
   git checkout "$BASE"
 else
