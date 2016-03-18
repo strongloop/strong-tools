@@ -18,12 +18,11 @@ install from github master, the latest:
    * Runs the strongloop/npm package variant of git flow
  * `slt-changelog`
    * Writes changelog
-   * Requires Ruby 1.9+
  * `slt-stage`
    * Updates version and runs `npm publish`, but only if the current registry is NOT npmjs.org
    * Requres Ruby 1.9+
  * `slt`
-   * lint, CLA boilerplate, package version manipulation, others...
+   * lint, CLA boilerplate, copyright headers, version manipulation, others...
 
 ### slt-release
 
