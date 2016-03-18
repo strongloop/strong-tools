@@ -1,4 +1,48 @@
-2016-02-26, Version 3.2.3
+2016-03-18, Version 4.0.0
+=========================
+
+ * Update README.md (Ryan Graham)
+
+ * strip test folder from releases (Ryan Graham)
+
+ * Relicense under MIT License (Ryan Graham)
+
+ * strip commented lines when writing blip script (Ryan Graham)
+
+ * Remove proprietary CLA template (Ryan Graham)
+
+ * support ARGV0 override by wrappers (Ryan Graham)
+
+ * remove proprietary copyright statements (Ryan Graham)
+
+ * record first and latest year for copyrights (Ryan Graham)
+
+ * add generic getter to Project class (Ryan Graham)
+
+ * initial CLI for copyright header injection (Ryan Graham)
+
+ * copyright: preserve shebang lines in files (Ryan Graham)
+
+ * use canonical license URLs in copyright headers (Ryan Graham)
+
+ * add helpers for listing js files (Ryan Graham)
+
+ * write copyright header to a file if missing (Ryan Graham)
+
+ * basic copyright header generator functions (Ryan Graham)
+
+ * initial helpers for copyright statements (Ryan Graham)
+
+ * upgrade to tap@5 (Ryan Graham)
+
+ * slt-changelog: extract git helper (Ryan Graham)
+
+ * Extract all proprietary licensing templates (Ryan Graham)
+
+ * slt-release: remove use of X.x-latest branches (Ryan Graham)
+
+
+2016-02-25, Version 3.2.3
 =========================
 
  * fix JS version of changelog generator (Ryan Graham)
