@@ -1,3 +1,8 @@
+'use strict';
+
+process.env.SLT_COPYRIGHT = require.resolve('./copyright-fixture');
+
+var _ = require('lodash');
 var copyright = require('../lib/copyright');
 var fs = require('fs');
 var path = require('path');
@@ -25,27 +30,30 @@ test('copyright years', function(t) {
 
 test('copyright headers', function(t) {
   t.test('MIT license', function(t) {
-    return copyright.header(__filename, 'MIT').then(function(header) {
+    var mit = mockPackage({license: _.constant('MIT')});
+    return copyright.header(__filename, mit).then(function(header) {
       testCopyrightStatement(t, header);
       t.match(header, 'MIT License');
       t.match(header, /at https:.+MIT$/);
     });
   });
   t.test('Artistic license', function(t) {
-    return copyright.header(__filename, 'Artistic').then(function(header) {
+    var artistic = mockPackage({license: _.constant('Artistic')});
+    return copyright.header(__filename, artistic).then(function(header) {
       testCopyrightStatement(t, header);
       t.match(header, 'Artistic License 2.0');
       t.match(header, /at https:.+Artistic-2.0$/);
     });
   });
   t.test('Commercial license', function(t) {
-    return copyright.header(__filename, 'commercial').then(function(header) {
+    var custom = mockPackage({license: _.constant('custom')});
+    return copyright.header(__filename, custom).then(function(header) {
       testCopyrightStatement(t, header);
       t.notMatch(header, 'Artistic');
       t.notMatch(header, 'MIT');
       t.match(header, 'US Government Users Restricted Rights');
       t.match(header, 'Use, duplication or disclosure');
-      t.match(header, 'restricted by GSA ADP Schedule Contract with IBM Corp.');
+      t.match(header, 'restricted by GSA ADP Schedule Contract with');
     });
   });
   t.end();
@@ -54,10 +62,11 @@ test('copyright headers', function(t) {
 test('header updating', function(t) {
   var fakeFile = path.resolve(__dirname, 'fake.js');
   var fakeJS = 'console.log("hello");\n';
+  var mit = mockPackage({license: _.constant('MIT')});
   fs.writeFileSync(fakeFile, fakeJS, 'utf8');
 
   t.test('when no header exists', function(t) {
-    return copyright.ensure(fakeFile, 'MIT').then(function(contents) {
+    return copyright.ensure(fakeFile, mit).then(function(contents) {
       var latest = fs.readFileSync(fakeFile, 'utf8');
       t.match(contents, fakeJS, 'should contain original content');
       t.equal(contents, latest, 'should update the file as well as return it');
@@ -65,7 +74,7 @@ test('header updating', function(t) {
   });
   t.test('when header already exists', function(t) {
     var alreadySet = fs.readFileSync(fakeFile, 'utf8');
-    return copyright.ensure(fakeFile, 'MIT').then(function(contents) {
+    return copyright.ensure(fakeFile, mit).then(function(contents) {
       var latest = fs.readFileSync(fakeFile, 'utf8');
       t.match(contents, fakeJS, 'should contain original content');
       t.equal(contents, latest, 'should update the file as well as return it');
@@ -79,10 +88,11 @@ test('shebang handling', function(t) {
   var fakeFile = path.resolve(__dirname, 'fake.js');
   var fakeJS = 'console.log("hello");\n';
   var fakeContent = '#!/usr/bin/env node\n\n' + fakeJS;
+  var mit = mockPackage({license: _.constant('MIT')});
   fs.writeFileSync(fakeFile, fakeContent, 'utf8');
 
   t.test('when no header exists', function(t) {
-    return copyright.ensure(fakeFile, 'MIT').then(function(contents) {
+    return copyright.ensure(fakeFile, mit).then(function(contents) {
       var latest = fs.readFileSync(fakeFile, 'utf8');
       t.match(contents, fakeJS, 'should contain original content');
       t.equal(contents, latest, 'should update the file as well as return it');
@@ -90,7 +100,7 @@ test('shebang handling', function(t) {
   });
   t.test('when header already exists', function(t) {
     var alreadySet = fs.readFileSync(fakeFile, 'utf8');
-    return copyright.ensure(fakeFile, 'MIT').then(function(contents) {
+    return copyright.ensure(fakeFile, mit).then(function(contents) {
       var latest = fs.readFileSync(fakeFile, 'utf8');
       t.match(contents, fakeJS, 'should contain original content');
       t.equal(contents, latest, 'should update the file as well as return it');
@@ -104,10 +114,12 @@ test('relicense header', function(t) {
   var fakeFile = path.resolve(__dirname, 'fake.js');
   var fakeJS = 'console.log("hello");\n';
   var fakeContent = '#!/usr/bin/env node\n\n' + fakeJS;
+  var mit = mockPackage({license: _.constant('MIT')});
+  var artistic = mockPackage({license: _.constant('Artistic')});
   fs.writeFileSync(fakeFile, fakeContent, 'utf8');
 
   t.test('when no header exists', function(t) {
-    return copyright.ensure(fakeFile, 'MIT').then(function(contents) {
+    return copyright.ensure(fakeFile, mit).then(function(contents) {
       var latest = fs.readFileSync(fakeFile, 'utf8');
       t.match(contents, fakeJS, 'should contain original content');
       t.match(contents, /MIT/, 'should mention new license');
@@ -116,7 +128,7 @@ test('relicense header', function(t) {
   });
   t.test('when header already exists', function(t) {
     var alreadySet = fs.readFileSync(fakeFile, 'utf8');
-    return copyright.ensure(fakeFile, 'Artistic').then(function(contents) {
+    return copyright.ensure(fakeFile, artistic).then(function(contents) {
       var latest = fs.readFileSync(fakeFile, 'utf8');
       t.match(contents, fakeJS, 'should contain original content');
       t.notEqual(contents, alreadySet, 'should be modified');
@@ -129,6 +141,12 @@ test('relicense header', function(t) {
 });
 
 function testCopyrightStatement(t, str) {
-  t.match(str, /Licensed Materials - Property of IBM$/m);
-  t.match(str, /Copyright IBM Corp\. \d{4}(,\d{4})*\. All Rights Reserved\.$/m);
+  t.match(str, /Copyright \S+ \d{4}(,\d{4})*\. All Rights Reserved\.$/m);
+  t.match(str, /Node module: .+$/m);
+}
+
+function mockPackage(props) {
+  return _.defaults(props, {
+    get: _.identity,
+  });
 }
