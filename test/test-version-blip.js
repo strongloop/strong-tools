@@ -12,7 +12,11 @@ function exists(path) {
   return fs.existsSync(path);
 }
 
-var BLIP_SRC = fs.readFileSync(require.resolve('../lib/blip'), 'utf8');
+var BLIP_SRC = fs.readFileSync(require.resolve('../lib/blip'), 'utf8')
+  .split('\n')
+  .filter(function(l) {
+    return /^\/\/ /.test(l);
+  }).join('\n');
 var SANDBOX = path.resolve(__dirname, 'SANDBOX-blip');
 var SANDBOX_BLIP = path.resolve(SANDBOX, '.sl-blip.js');
 var SANDBOX_PKG = path.resolve(SANDBOX, 'package.json');
