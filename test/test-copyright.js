@@ -8,7 +8,9 @@ test('copyright years', function(t) {
     return copyright.years('.').then(function(years) {
       t.comment('strong-tools first/last years: %j', years);
       // asserts the start of the years list, not complete list
-      t.match(years, ['2014', '2015', '2016'], 'project created in 2014');
+      t.match(years, ['2014'], 'project created in 2014');
+      t.notEqual(years[1], '2014', 'project modified after 2014');
+      t.match(years[1], /^\d\d\d\d$/, 'project last modified is valid year');
     });
   });
   t.test('this file', function(t) {
