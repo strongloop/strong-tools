@@ -1,3 +1,8 @@
+// Copyright IBM Corp. 2014,2016. All Rights Reserved.
+// Node module: strong-tools
+// This file is licensed under the MIT License.
+// License text available at https://opensource.org/licenses/MIT
+
 var assert = require('tapsert');
 var fs = require('fs');
 var path = require('path');
@@ -12,7 +17,11 @@ function exists(path) {
   return fs.existsSync(path);
 }
 
-var BLIP_SRC = fs.readFileSync(require.resolve('../lib/blip'), 'utf8');
+var BLIP_SRC = fs.readFileSync(require.resolve('../lib/blip'), 'utf8')
+  .split('\n')
+  .filter(function(l) {
+    return /^\/\/ /.test(l);
+  }).join('\n');
 var SANDBOX = path.resolve(__dirname, 'SANDBOX-blip');
 var SANDBOX_BLIP = path.resolve(SANDBOX, '.sl-blip.js');
 var SANDBOX_PKG = path.resolve(SANDBOX, 'package.json');

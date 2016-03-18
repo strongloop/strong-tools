@@ -1,4 +1,8 @@
 #!/usr/bin/env node
+// Copyright IBM Corp. 2014,2016. All Rights Reserved.
+// Node module: strong-tools
+// This file is licensed under the MIT License.
+// License text available at https://opensource.org/licenses/MIT
 
 var _ = require('lodash');
 var fs = require('fs');
@@ -14,7 +18,7 @@ if (cmd in tools) {
   else
     defaultCLI(tools[cmd], pkg);
 } else {
-  usage(path.basename(process.argv[1]), console.log.bind(console));
+  usage(process.env.ARGV0 || path.basename(process.argv[1]), console.log);
   process.exit(1);
 }
 

@@ -1,7 +1,8 @@
 strong-tools
 ============
 
-Helpers to building, testing, staging, and releasing modules at StrongLoop.
+Helpers for building, testing, staging, and releasing modules the way StrongLoop
+does.
 
 Install from npmjs.org:
 
@@ -90,11 +91,21 @@ Compares the version in package.json with the latest version on the registry.
 Usage: slt <CMD> [PKG]
 
 Commands:
-  lint      Perform a simple linting of the given package.json
-  cla       Create or verify contribution guidelines
-  info      Display metadata about package
-  version   Version manipulation
-  help      Print this usage guide
+  lint        Perform a simple linting of the given package.json
+  cla         Create or verify contribution guidelines
+  license [F] Set package licensing to standard form F
+      Form is auto-detected by default, it can be set explicitly to one of:
+      --mit, --dual-mit, --artistic, --dual-artistic, or --strongloop
+  copyright [F..]
+              Insert/update copyright headers in JS source files. Uses git for
+              copyright years and package.json for license reference.
+  info        Display metadata about package
+  version     Version manipulation
+  semver      Wrapper for semver command from semver package
+  help        Print this usage guide
+
+Confirm license changes are acceptable with:
+    git diff -M --cached -w --ignore-blank-lines
 ```
 
 #### slt version
@@ -145,6 +156,4 @@ slt license
 ##### Set the license to a standard form
 
 No auto-detection:
-- slt license --mit/--dual-mit/--strongloop/--dual-artistic
-
-Note: --artistic not supported yet.
+- slt license --mit/--artistic/--custom
