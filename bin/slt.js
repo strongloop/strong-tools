@@ -14,7 +14,7 @@ if (cmd in tools) {
   else
     defaultCLI(tools[cmd], pkg);
 } else {
-  usage(path.basename(process.argv[1]), console.log.bind(console));
+  usage(process.env.ARGV0 || path.basename(process.argv[1]), console.log);
   process.exit(1);
 }
 
