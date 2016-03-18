@@ -1,3 +1,8 @@
+// Copyright IBM Corp. 2014,2016. All Rights Reserved.
+// Node module: strong-tools
+// This file is licensed under the MIT License.
+// License text available at https://opensource.org/licenses/MIT
+
 var assert = require('tapsert');
 var fmt = require('util').format;
 var tools = require('../');

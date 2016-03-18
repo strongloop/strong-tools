@@ -6,8 +6,7 @@
   "scripts": {
     "pretest": "eslint --ignore-path .gitignore ./",
     "test": "tap --coverage --coverage-report=cobertura test/test-*",
-    "posttest": "tap --coverage-report=text",
-    "preinstall": "node .sl-blip.js || exit 0"
+    "posttest": "tap --coverage-report=text"
   },
   "repository": {
     "type": "git",
@@ -18,8 +17,8 @@
     "package.json",
     "init"
   ],
-  "author": "Ryan Graham <ryan@strongloop.com>",
-  "license": "SEE LICENSE IN LICENSE.md",
+  "author": "Ryan Graham <rmg@ca.ibm.com>",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/strongloop/strong-tools/issues"
   },
