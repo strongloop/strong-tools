@@ -1,3 +1,9 @@
+2016-03-19, Version 4.1.0
+=========================
+
+ * ignore test dir when staging (Ryan Graham)
+
+
 2016-03-18, Version 4.0.0
 =========================
 
