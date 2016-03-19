@@ -44,4 +44,12 @@ else
   system "npm version --git-tag-version=false --sign-git-tag=false #{version}"
 end
 
+# npm uses .gitignore if there is no .npmignore, so we'll use that as
+# our starting point if there isn't already a .npmigore file
+if File.exist?(".npmignore")
+  system("echo test >> .npmignore")
+else
+  system("echo test | cat .gitignore - >> .npmignore")
+end
+
 exec "npm install && npm publish #{ARGV.join(' ')}"
