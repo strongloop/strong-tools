@@ -12,10 +12,14 @@ assert(tools.info.cli, 'info.cli is exported');
 assert(tools.info.name, 'info.name is exported');
 assert(tools.info.version, 'info.version is exported');
 assert(tools.info.repo, 'info.repo is exported');
+assert(tools.info.get, 'info.get is exported');
 
 assertOutput('name', ['.'], 'strong-tools');
 assertOutput('repo', ['.'], 'strongloop/strong-tools');
 assertOutput('version', ['.'], /\d+\.\d+\.\d+/);
+assertOutput('get', ['.', 'name'], 'strong-tools');
+assertOutput('get', ['.', 'bugs.url'],
+             'https://github.com/strongloop/strong-tools/issues');
 
 function assertOutput(fn, args, output) {
   tools.info.cli.out = fmtAssert;
