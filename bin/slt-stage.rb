@@ -48,6 +48,7 @@ end
 # our starting point if there isn't already a .npmigore file
 if File.exist?(".npmignore")
   system("echo test >> .npmignore")
+  system("echo .travis.yml >> .npmignore")
 else
   system("echo test | cat .gitignore - >> .npmignore")
 end

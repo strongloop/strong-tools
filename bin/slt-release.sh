@@ -120,6 +120,7 @@ then
   fi
   # ignore the entire test tree
   echo "test" >> .npmignore
+  echo ".travis.yml" >> .npmignore
   npm publish
   git checkout "$BASE"
 else
