@@ -1,3 +1,13 @@
+2016-03-28, Version 4.2.0
+=========================
+
+ * refactor npmignore checks for consistency (Ryan Graham)
+
+ * ensure .travis.yml doesn't get published (Ryan Graham)
+
+ * git: use larger buffer for command output (Ryan Graham)
+
+
 2016-03-19, Version 4.1.0
 =========================
 
