@@ -46,10 +46,12 @@ end
 
 # npm uses .gitignore if there is no .npmignore, so we'll use that as
 # our starting point if there isn't already a .npmigore file
-if File.exist?(".npmignore")
-  system("echo test >> .npmignore")
-else
-  system("echo test | cat .gitignore - >> .npmignore")
+if File.exists?(".gitignore") && !File.exist?(".npmignore")
+  IO.copy_stream(".gitignore", ".npmignore")
+end
+open(".npmignore", "a") do |i|
+  i.puts("test")
+  i.puts(".travis.yml")
 end
 
 exec "npm install && npm publish #{ARGV.join(' ')}"

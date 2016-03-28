@@ -115,11 +115,12 @@ then
   git checkout "$TAG"
   # npm uses .gitignore if there is no .npmignore, so we'll use that as
   # our starting point if there isn't already a .npmigore file
-  if [[ ! -f ".npmignore" ]]; then
+  if test -f ".gitignore" -a ! -f ".npmignore"; then
     cp .gitignore .npmignore
   fi
   # ignore the entire test tree
   echo "test" >> .npmignore
+  echo ".travis.yml" >> .npmignore
   npm publish
   git checkout "$BASE"
 else
