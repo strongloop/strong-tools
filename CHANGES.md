@@ -1,3 +1,11 @@
+2016-03-29, Version 4.3.0
+=========================
+
+ * don't ignore tests if exported (Ryan Graham)
+
+ * add info command for arbitrary paths (Ryan Graham)
+
+
 2016-03-28, Version 4.2.0
 =========================
 
