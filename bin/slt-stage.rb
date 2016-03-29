@@ -50,7 +50,9 @@ if File.exists?(".gitignore") && !File.exist?(".npmignore")
   IO.copy_stream(".gitignore", ".npmignore")
 end
 open(".npmignore", "a") do |i|
-  i.puts("test")
+  if `#{SLT} info get . publishConfig.export-tests`.lines.map(&:strip).last != "true"
+    i.puts("test")
+  end
   i.puts(".travis.yml")
 end
 

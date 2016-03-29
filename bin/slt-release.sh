@@ -118,8 +118,10 @@ then
   if test -f ".gitignore" -a ! -f ".npmignore"; then
     cp .gitignore .npmignore
   fi
-  # ignore the entire test tree
-  echo "test" >> .npmignore
+  if test "$(slt info get . publishConfig.export-tests)" != "true"; then
+    # ignore the entire test tree
+    echo "test" >> .npmignore
+  fi
   echo ".travis.yml" >> .npmignore
   npm publish
   git checkout "$BASE"
