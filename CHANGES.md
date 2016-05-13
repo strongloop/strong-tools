@@ -1,4 +1,20 @@
-2016-03-29, Version 4.3.0
+2016-05-13, Version 4.4.0
+=========================
+
+ * test: add basic tests for license command (Ryan Graham)
+
+ * lib: promisify license module (Ryan Graham)
+
+ * add support for Apache-2.0 license (Ryan Graham)
+
+ * allow travis to submit coverage to coveralls.io (Ryan Graham)
+
+ * ci: fix inadequate clone depth in travis (Ryan Graham)
+
+ * add to travis-ci.org (Ryan Graham)
+
+
+2016-03-28, Version 4.3.0
 =========================
 
  * don't ignore tests if exported (Ryan Graham)
