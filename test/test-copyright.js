@@ -50,10 +50,19 @@ test('copyright headers', function(t) {
       t.match(header, /at https:.+Artistic-2.0$/);
     });
   });
+  t.test('Apache license', function(t) {
+    var artistic = mockPackage({license: _.constant('Apache')});
+    return copyright.header(__filename, artistic).then(function(header) {
+      testCopyrightStatement(t, header);
+      t.match(header, 'Apache License 2.0');
+      t.match(header, /at https:.+Apache-2.0$/);
+    });
+  });
   t.test('Commercial license', function(t) {
     var custom = mockPackage({license: _.constant('custom')});
     return copyright.header(__filename, custom).then(function(header) {
       testCopyrightStatement(t, header);
+      t.notMatch(header, 'Apache');
       t.notMatch(header, 'Artistic');
       t.notMatch(header, 'MIT');
       t.match(header, 'US Government Users Restricted Rights');
