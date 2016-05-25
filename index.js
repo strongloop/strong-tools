@@ -14,4 +14,5 @@ module.exports = {
   version: require('./lib/version'),
   semver: wrapped('semver/bin/semver'),
   copyright: require('./lib/copyright'),
+  shrinkwrap: require('./lib/shrinkwrap'),
 };
