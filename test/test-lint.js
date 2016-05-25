@@ -3,42 +3,56 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-var assert = require('tapsert');
 var lint = require('../').lint;
+var test = require('tap').test;
 var _ = require('lodash');
 
-var empty = lint({});
-assert(empty,
+test('empty', function(t) {
+  var empty = lint({});
+  t.ok(empty,
        'Lint result of an empty object:');
-assert(_.all(empty, notMatch(/Version ".*" is lower than 1.0.0/)),
+  t.ok(_.all(empty, notMatch(/Version ".*" is lower than 1.0.0/)),
        '  not validate the missing version');
-assert(_.select(empty, match(/Field ".+" is missing/)).length > 5,
+  t.ok(_.select(empty, match(/Field ".+" is missing/)).length > 5,
        '  triggers multiple missing fields');
+  t.end();
+});
 
-var lowVersion = lint({ version: '0.0.0' });
-assert(lowVersion,
+test('low version', function(t) {
+  var lowVersion = lint({ version: '0.0.0' });
+  t.ok(lowVersion,
        'Version 0.0.0:');
-assert(_.contains(lowVersion, 'Version "0.0.0" is lower than 1.0.0'),
+  t.ok(_.contains(lowVersion, 'Version "0.0.0" is lower than 1.0.0'),
        '  is too low');
+  t.end();
+});
 
-var prerelease = lint({ version: '1.0.0-0' });
-assert(prerelease,
+test('prerelease', function(t) {
+  var prerelease = lint({ version: '1.0.0-0' });
+  t.ok(prerelease,
        'Version 1.0.0-0');
-assert(!_.contains(prerelease, 'Version "1.0.0-0" is lower than 1.0.0'),
+  t.ok(!_.contains(prerelease, 'Version "1.0.0-0" is lower than 1.0.0'),
        '  is allowed');
+  t.end();
+});
 
-var badVersion = lint({ version: 'x.y.z' });
-assert(badVersion,
+test('bad version', function(t) {
+  var badVersion = lint({ version: 'x.y.z' });
+  t.ok(badVersion,
        'Version x.y.z:');
-assert(_.contains(badVersion, 'Version "x.y.z" is invalid'),
+  t.ok(_.contains(badVersion, 'Version "x.y.z" is invalid'),
        '  is a bad version');
+  t.end();
+});
 
-var badRepo = lint({ repository: 'BAD' });
-assert(badRepo,
+test('bad repo', function(t) {
+  var badRepo = lint({ repository: 'BAD' });
+  t.ok(badRepo,
        'Repository as a string');
-assert(_.contains(badRepo, 'Repository "BAD" is a string, not an object'),
+  t.ok(_.contains(badRepo, 'Repository "BAD" is a string, not an object'),
        '  is not valid');
-
+  t.end();
+});
 
 function notMatch(regex) {
   return _.compose(not, match(regex));

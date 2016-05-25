@@ -48,8 +48,7 @@
     "eslint": "^1.10.0",
     "eslint-config-strongloop": "^1.0.0",
     "rimraf": "^2.2.8",
-    "tap": "^5.x",
-    "tapsert": "^1.0.0"
+    "tap": "^5.x"
   },
   "engine": {
     "ruby": "^2.0.0"

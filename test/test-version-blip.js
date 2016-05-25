@@ -3,10 +3,10 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-var assert = require('tapsert');
 var fs = require('fs');
 var path = require('path');
 var rimraf = require('rimraf');
+var test = require('tap').test;
 var tools = require('../');
 
 function exists(path) {
@@ -31,104 +31,120 @@ tools.version.cli.out = function(output) {
   newVer = output;
 };
 
-rimraf.sync(SANDBOX);
-fs.mkdirSync(SANDBOX);
-fs.writeFileSync(SANDBOX_PKG, JSON.stringify({name: 'testing'}), 'utf8');
+test('setup', function(t) {
+  rimraf.sync(SANDBOX);
+  fs.mkdirSync(SANDBOX);
+  fs.writeFileSync(SANDBOX_PKG, JSON.stringify({name: 'testing'}), 'utf8');
+  t.pass('sandbox created');
+  t.ok(tools.version.set, 'version exports .set()');
+  t.end();
+});
 
-assert(tools.version.set, 'version exports .set()');
-
-var original = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
-assert(!original.optionalDependencies,
+test('without blip', function(t) {
+  var original = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
+  t.ok(!original.optionalDependencies,
        'sl-blip dependency updating when missing');
-tools.version.cli('set', '1.2.3', SANDBOX_PKG);
-var updated = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
-assert(!original.optionalDependencies,
+  tools.version.cli('set', '1.2.3', SANDBOX_PKG);
+  var updated = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
+  t.ok(!updated.optionalDependencies,
        '-- sl-blip not added');
+  t.end();
+});
 
-var withBlip = {
-  name: 'testing',
-  optionalDependencies: {
-    'sl-blip': '*',
-  },
-};
-fs.writeFileSync(SANDBOX_PKG, JSON.stringify(withBlip), 'utf8');
-original = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
-assert(original.optionalDependencies,
+test('with blip', function(t) {
+  var withBlip = {
+    name: 'testing',
+    optionalDependencies: {
+      'sl-blip': '*',
+    },
+  };
+  fs.writeFileSync(SANDBOX_PKG, JSON.stringify(withBlip), 'utf8');
+  var original = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
+  t.ok(original.optionalDependencies,
        'sl-blip dependency updates when present');
-assert.strictEqual(original.optionalDependencies['sl-blip'], '*',
-                   '-- initial version');
-assert(!('scripts' in original), 'no scripts set initially');
-assert(!exists(SANDBOX_BLIP), '-- no file at .sl-blip.js');
+  t.strictEqual(original.optionalDependencies['sl-blip'], '*',
+                '-- initial version');
+  t.ok(!('scripts' in original), 'no scripts set initially');
+  t.ok(!exists(SANDBOX_BLIP), '-- no file at .sl-blip.js');
 
-newVer = false;
-tools.version.cli('set', '1.2.3', SANDBOX_PKG);
-assert.strictEqual(newVer, 'testing@1.2.3',
-                   '-- prints name@version');
+  newVer = false;
+  tools.version.cli('set', '1.2.3', SANDBOX_PKG);
+  t.strictEqual(newVer, 'testing@1.2.3',
+                '-- prints name@version');
 
-updated = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
-assert(!('sl-blip' in updated.optionalDependencies), '-- sl-blip removed');
-assert.strictEqual(updated.scripts.preinstall, 'node .sl-blip.js || exit 0',
-                   '-- injects sl-blip as a preinstall script');
-assert(exists(SANDBOX_BLIP), '-- .sl-blip.js was created');
-assert.strictEqual(fs.readFileSync(SANDBOX_BLIP, 'utf8'), BLIP_SRC,
-                   '-- blip script content is correct');
+  var updated = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
+  t.ok(!('sl-blip' in updated.optionalDependencies), '-- sl-blip removed');
+  t.strictEqual(updated.scripts.preinstall, 'node .sl-blip.js || exit 0',
+                '-- injects sl-blip as a preinstall script');
+  t.ok(exists(SANDBOX_BLIP), '-- .sl-blip.js was created');
+  t.strictEqual(fs.readFileSync(SANDBOX_BLIP, 'utf8'), BLIP_SRC,
+                '-- blip script content is correct');
+  t.end();
+});
 
-var withBlipAndPreinstall = {
-  name: 'testing',
-  scripts: {
-    preinstall: 'something other than blip',
-  },
-  optionalDependencies: {
-    'sl-blip': '*',
-  },
-};
-fs.writeFileSync(SANDBOX_BLIP, 'something else', 'utf8');
-fs.writeFileSync(SANDBOX_PKG, JSON.stringify(withBlipAndPreinstall), 'utf8');
-original = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
-assert(original.optionalDependencies,
-      'sl-blip dependency updates when present');
-assert.strictEqual(original.optionalDependencies['sl-blip'], '*',
-                  '-- initial version');
-assert.strictEqual(original.scripts.preinstall, 'something other than blip',
-                   '-- initial preinstall script');
-assert.strictEqual(fs.readFileSync(SANDBOX_BLIP, 'utf8'), 'something else',
-                   '-- blip script content is garbage');
-newVer = false;
-tools.version.cli('set', '1.2.3', SANDBOX_PKG);
-assert.strictEqual(newVer, 'testing@1.2.3',
-                   '-- prints name@version');
+test('with blip AND preinstall script', function(t) {
+  var withBlipAndPreinstall = {
+    name: 'testing',
+    scripts: {
+      preinstall: 'something other than blip',
+    },
+    optionalDependencies: {
+      'sl-blip': '*',
+    },
+  };
+  fs.writeFileSync(SANDBOX_BLIP, 'something else', 'utf8');
+  fs.writeFileSync(SANDBOX_PKG, JSON.stringify(withBlipAndPreinstall), 'utf8');
+  var original = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
+  t.ok(original.optionalDependencies,
+        'sl-blip dependency updates when present');
+  t.strictEqual(original.optionalDependencies['sl-blip'], '*',
+                    '-- initial version');
+  t.strictEqual(original.scripts.preinstall, 'something other than blip',
+                     '-- initial preinstall script');
+  t.strictEqual(fs.readFileSync(SANDBOX_BLIP, 'utf8'), 'something else',
+                     '-- blip script content is garbage');
+  newVer = false;
+  tools.version.cli('set', '1.2.3', SANDBOX_PKG);
+  t.strictEqual(newVer, 'testing@1.2.3',
+                     '-- prints name@version');
 
-updated = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
-assert(!('sl-blip' in updated.optionalDependencies), '-- sl-blip removed');
-assert.strictEqual(updated.scripts.preinstall, original.scripts.preinstall,
-                   '-- original preinstall script preserved');
-assert.strictEqual(updated.scripts.postinstall, 'node .sl-blip.js || exit 0',
-                   '-- injects as postinstall script');
-assert.strictEqual(fs.readFileSync(SANDBOX_BLIP, 'utf8'), BLIP_SRC,
-                   '-- blip script content is replaced');
+  var updated = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
+  t.ok(!('sl-blip' in updated.optionalDependencies), '-- sl-blip removed');
+  t.strictEqual(updated.scripts.preinstall, original.scripts.preinstall,
+                     '-- original preinstall script preserved');
+  t.strictEqual(updated.scripts.postinstall, 'node .sl-blip.js || exit 0',
+                     '-- injects as postinstall script');
+  t.strictEqual(fs.readFileSync(SANDBOX_BLIP, 'utf8'), BLIP_SRC,
+                     '-- blip script content is replaced');
+  t.end();
+});
 
-var withOldBlipInstall = {
-  name: 'testing',
-  scripts: {
-    install: 'node .sl-blip.js',
-  },
-};
-fs.writeFileSync(SANDBOX_BLIP, 'something else', 'utf8');
-fs.writeFileSync(SANDBOX_PKG, JSON.stringify(withOldBlipInstall), 'utf8');
-original = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
-assert(original.name,
-      'sl-blip script in old form updates when present');
-assert.strictEqual(original.scripts.install, 'node .sl-blip.js',
-                   '-- initial install script');
-assert.strictEqual(fs.readFileSync(SANDBOX_BLIP, 'utf8'), 'something else',
-                   '-- blip script content is garbage');
-newVer = false;
-tools.version.cli('set', '1.1.2', SANDBOX_PKG);
-assert.strictEqual(newVer, 'testing@1.1.2',
-                   '-- prints name@version');
+test('wth old blip install script', function(t) {
+  var withOldBlipInstall = {
+    name: 'testing',
+    scripts: {
+      install: 'node .sl-blip.js',
+    },
+  };
+  fs.writeFileSync(SANDBOX_BLIP, 'something else', 'utf8');
+  fs.writeFileSync(SANDBOX_PKG, JSON.stringify(withOldBlipInstall), 'utf8');
+  var original = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
+  t.ok(original.name,
+        'sl-blip script in old form updates when present');
+  t.strictEqual(original.scripts.install, 'node .sl-blip.js',
+                     '-- initial install script');
+  t.strictEqual(fs.readFileSync(SANDBOX_BLIP, 'utf8'), 'something else',
+                     '-- blip script content is garbage');
+  newVer = false;
+  tools.version.cli('set', '1.1.2', SANDBOX_PKG);
+  t.strictEqual(newVer, 'testing@1.1.2',
+                     '-- prints name@version');
 
-updated = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
-assert.strictEqual(updated.scripts.install, 'node .sl-blip.js || exit 0',
-                   '-- updates existing install script');
-assert.strictEqual(fs.readFileSync(SANDBOX_BLIP, 'utf8'), BLIP_SRC,
-                   '-- blip script content is replaced');
+  var updated = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
+  t.strictEqual(updated.scripts.install, 'node .sl-blip.js || exit 0',
+                     '-- updates existing install script');
+  t.strictEqual(fs.readFileSync(SANDBOX_BLIP, 'utf8'), BLIP_SRC,
+                     '-- blip script content is replaced');
+  t.end();
+});
+

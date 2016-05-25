@@ -3,16 +3,19 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-var assert = require('tapsert');
 var fmt = require('util').format;
+var test = require('tap').test;
 var tools = require('../');
 
-assert(tools.info, 'info is exported');
-assert(tools.info.cli, 'info.cli is exported');
-assert(tools.info.name, 'info.name is exported');
-assert(tools.info.version, 'info.version is exported');
-assert(tools.info.repo, 'info.repo is exported');
-assert(tools.info.get, 'info.get is exported');
+test('API', function(t) {
+  t.ok(tools.info, 'info is exported');
+  t.ok(tools.info.cli, 'info.cli is exported');
+  t.ok(tools.info.name, 'info.name is exported');
+  t.ok(tools.info.version, 'info.version is exported');
+  t.ok(tools.info.repo, 'info.repo is exported');
+  t.ok(tools.info.get, 'info.get is exported');
+  t.end();
+});
 
 assertOutput('name', ['.'], 'strong-tools');
 assertOutput('repo', ['.'], 'strongloop/strong-tools');
@@ -22,17 +25,18 @@ assertOutput('get', ['.', 'bugs.url'],
              'https://github.com/strongloop/strong-tools/issues');
 
 function assertOutput(fn, args, output) {
-  tools.info.cli.out = fmtAssert;
-  return tools.info[fn].apply(null, args);
+  test('function: ' + fn, function(t) {
+    tools.info.cli.out = fmtAssert;
+    return tools.info[fn].apply(null, args);
 
-  function fmtAssert() {
-    var printed = fmt.apply(null, arguments);
-    if (output instanceof RegExp) {
-      assert(output.test(printed),
-             fmt('%s(%s) output matches %s', fn, args, output));
-    } else {
-      assert.equal(printed, output,
-                   fmt('%s(%s) prints "%s"', fn, args, output));
+    function fmtAssert() {
+      var printed = fmt.apply(null, arguments);
+      if (output instanceof RegExp) {
+        t.match(printed, output);
+      } else {
+        t.equal(printed, output);
+      }
+      t.end();
     }
-  }
+  });
 }
