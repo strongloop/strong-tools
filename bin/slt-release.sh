@@ -1,23 +1,48 @@
 #!/bin/sh
 
 exec << "___"
-usage: slt-release [-hup] VERSION
+usage: slt-release [-hup] [VERSION]
 
 Options:
   h   print this helpful message
   u   update the origin with a git push
   p   publish the package to npmjs.org
 
-VERSION must be specified and should be a valid SemVer version (`x.y.z`)
+If VERSION is specified it must be a valid SemVer version (`x.y.z`)
 or a valid version increment:
   major, minor, patch, premajor, preminor, or prepatch
+
+If VERSION is NOT specified, then the version field in package.json is
+used.
+
+slt-release will abort if:
+ - the tag matching the version already exists
+ - the version has already been published
+ - the version is not a valid SemVer string
 
 Typical usage, if you want to examine the results before updating github
 and npmjs.org:
 
   slt-release 1.2.3
 
-And if you are comfortable that the results should be pushed and published:
+If at this point you want to publish, follow the instructions slt-release
+gave in the output, which will be something along the lines of:
+
+  git checkout v1.2.3
+  npm publish
+  git checkout master
+  git push origin master:master v1.2.3:v1.2.3
+
+If you wish to abort or abandon the release, you will need to revert the
+changes and delete the tag:
+
+  git checkout master
+  git reset --hard origin/master
+  git tag -d v1.2.3
+
+If you are comfortable with having slt-release perform the `git push` and
+`npm publish` steps for you, you can use the -u and -p flags and slt-release
+will do them for you.
 
   slt-release -up 1.2.3
 ___
@@ -35,8 +60,7 @@ shift `expr $OPTIND - 1`
 
 case $1 in
   "")
-    echo "Missing version, try \`slt-release -h\` for help."
-    exit 1
+    V=$(slt info version)
     ;;
   major|minor|patch|premajor|preminor|prepatch)
     INC=$1
@@ -44,19 +68,31 @@ case $1 in
     V=$(slt semver -i $INC $CURRENT)
     ;;
   *)
-    V=$(slt semver $1)
-    if [ $? -ne 0 ]; then
-      echo "Invalid version: $1"
-      exit 1
-    fi
+    V=$1
+    ;;
 esac
-
-set -e
 
 # Ensure V is never prefixed with v, but TAG always is
 V=${V#v}
 TAG="v$V"
 MAJOR_V=${V%%.*}
+NAME=$(slt info name)
+
+if [ -z "$V" ]; then
+  echo "Missing version, try \`slt-release -h\` for help."
+  exit 1
+elif ! slt semver $V; then
+  echo "Invalid version given: $V"
+  exit 1
+elif git show-ref --tags --quiet $TAG; then
+  echo "Tag already exists: $TAG"
+  exit 1
+elif [ "$(npm info $NAME@$V .version)" = "$V" ]; then
+  echo "$NAME@$V already published (but not tagged in git)"
+  exit 1
+fi
+
+set -e
 
 # Our starting point, so we can return to that branch when we are done
 # If HEAD is also what we are releasing, we merge it back in.
