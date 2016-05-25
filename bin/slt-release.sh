@@ -118,19 +118,61 @@ echo "Committing package and CHANGES for v$V"
 if [ -e .sl-blip.js ]; then
   git add .sl-blip.js
 fi
-git add $(git ls-files bower.json) package.json CHANGES.md
+TO_ADD="$(git ls-files bower.json) package.json CHANGES.md"
+TO_REMOVE=""
+if [ -e npm-shrinkwrap.json ]; then
+  if ! git cat-file -e "$BASE":npm-shrinkwrap.json; then
+    TO_REMOVE="npm-shrinkwrap.json"
+  fi
+  TO_ADD="$TO_ADD npm-shrinkwrap.json"
+fi
+
+git add $TO_ADD
 slt-changelog --summary --version $V | git commit -F-
 slt-changelog --summary --version $V | git tag -a "$TAG" -F-
 
-echo "Checking out starting branch"
-git checkout "$BASE"
-
 echo "Updating $BASE.."
-# --ff: Prefer fast-forward merge, but fallback to real merge if necessary.
-# NOTE: Use release/X here instead of the tag because you can't actually do a
-# fast-forward merge to an annotated tag because it is actually a discrete
-# object and not merely a ref to a commit!
-git merge --ff --no-edit release/"$V"
+# if we committed a file as part of the release, but it wasn't previously
+# being tracked, like an npm-shrinkwrap.json, then we want to do some git
+# dark magic to remove it as part of the merge back in to the base branch
+if [ -n "$TO_REMOVE" ]; then
+  echo "Composing merge commit..."
+  # 1. stage a commit as though we're just removing the files we want to
+  # to filter out.
+  echo "Filtering out: $TO_REMOVE"
+  git rm $TO_REMOVE
+  # 2. Now we need to do what "git commit" and "git merge" both do under
+  # the hood, but don't actually expose: build our own bespoke commit!
+  # 2a. create a tree object from INDEX (git commit does this normally)
+  echo "Building tree.."
+  TREE=$(git write-tree --missing-ok)
+  # 2b. create a commit object from the tree object, with both our base
+  # and our release branches as parent commits. This is what git merge
+  # does, except the only access it gives to the tree it uses is if you
+  # have merge conflicts that needed to be resolved.
+  echo "Building commit.."
+  SHA1=$(git commit-tree -p $BASE -p release/"$V" -m "Merge $V release" $TREE)
+  # 2c. now we have a lovely git commit floating around. Quick, catch it
+  # and slap a ref on it before it gets garbage collected! (not actually
+  # a concern, but it makes for a better story).
+  # git merge and git commit both normally do this for us, but we have to
+  # do it ourselves since we are sort of re-implementing them.
+  echo "Updating $BASE ref"
+  git update-ref refs/heads/$BASE $SHA1
+  # 3. Now check out out the base branch - that's right, we merged our
+  # release branch into the base branch without even checking out the
+  # base branch. Didn't you notice? Cool, right?
+  echo "Checking out starting branch"
+  git checkout "$BASE"
+else
+  echo "Checking out starting branch"
+  git checkout "$BASE"
+  # --ff: Prefer fast-forward merge, but fallback to real merge if necessary.
+  # NOTE: Use release/X here instead of the tag because you can't actually do a
+  # fast-forward merge to an annotated tag because it is actually a discrete
+  # object and not merely a ref to a commit!
+  git merge --ff --no-edit release/"$V"
+fi
 
 # Need -D because master has not been pushed to origin/master. If we auto-push,
 # we can change it to --delete, but I think it does no harm to use -D.
