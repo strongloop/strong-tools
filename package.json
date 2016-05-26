@@ -45,8 +45,8 @@
     "slt-changelog": "bin/slt-changelog.js"
   },
   "devDependencies": {
-    "eslint": "^1.10.0",
-    "eslint-config-strongloop": "^1.0.0",
+    "eslint": "^2",
+    "eslint-config-strongloop": "^2",
     "rimraf": "^2.2.8",
     "tap": "^5.x"
   },
