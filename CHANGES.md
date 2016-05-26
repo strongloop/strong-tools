@@ -1,3 +1,29 @@
+2016-05-26, Version 4.5.0
+=========================
+
+ * slt-release: commit shrinkwrap, but don't merge it (Ryan Graham)
+
+ * slt-release: fallback to package.json for version (Ryan Graham)
+
+ * slt: add shrinkwrap cmd for filtering fields (Ryan Graham)
+
+ * deps: upgrade to lodash v4 (Ryan Graham)
+
+ * slt license: replace sync-exec with Promises (Ryan Graham)
+
+ * deps: remove dependency on request (Ryan Graham)
+
+ * deps: update gift to latest version (Ryan Graham)
+
+ * deps: replace spdx with spdx-expression-validate (Ryan Graham)
+
+ * cla: refactor to easier async testing (Ryan Graham)
+
+ * deps: upgrade eslint (Ryan Graham)
+
+ * test: rewrite tapsert tests as tap tests (Ryan Graham)
+
+
 2016-05-13, Version 4.4.0
 =========================
 
