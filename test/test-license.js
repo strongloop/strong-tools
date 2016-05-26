@@ -7,10 +7,15 @@ var fs = require('fs');
 var path = require('path');
 var rimraf = require('rimraf');
 var test = require('tap').test;
-var tools = require('../');
 
+var CUSTOM = path.resolve(__dirname, 'custom-license-fixture.tpl');
 var SANDBOX = path.resolve(__dirname, 'SANDBOX-lic');
 var SANDBOX_PKG = path.resolve(SANDBOX, 'package.json');
+
+// The interface for using custom license templates if env var based
+// so we need to set this _before_ we require() the actual code.
+process.env.SLT_LICENSE = CUSTOM;
+var tools = require('../');
 
 test('setup', function(t) {
   rimraf.sync(SANDBOX);
@@ -57,6 +62,24 @@ test('license writing', function(t) {
                  '-- should change license in package');
       t.strictEqual(updated.license, 'Artistic-2.0',
                     '-- should be set to Artistic-2.0');
+    });
+  });
+  t.test('custom', function(t) {
+    tools.license.cli.out = t.comment;
+    return tools.license.cli('--custom').then(function() {
+      var updated = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
+      var licensePath = path.resolve(SANDBOX, 'LICENSE.md');
+      var license = fs.readFileSync(licensePath, 'utf8');
+      var now = new Date().getFullYear();
+      t.notEqual(updated.license, original.license,
+                 '-- should change license in package');
+      t.strictEqual(updated.license, 'SEE LICENSE IN LICENSE.md',
+                    '-- should be set to SEE LICENSE IN LICENSE.md');
+      t.match(license, /^This is a custom license!/);
+      t.match(license, /^It is for a package called testing, which/m);
+      t.match(license, /which is owned by Author\.$/m);
+      t.match(license, new RegExp('created in ' + now + ', which is'));
+      t.equal(license[license.length - 1], '\n', 'file is newline terminated');
     });
   });
   t.end();
