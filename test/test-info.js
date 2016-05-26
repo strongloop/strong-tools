@@ -20,6 +20,9 @@ test('API', function(t) {
 assertOutput('name', ['.'], 'strong-tools');
 assertOutput('repo', ['.'], 'strongloop/strong-tools');
 assertOutput('version', ['.'], /\d+\.\d+\.\d+/);
+assertOutput('released', ['.'], /\d+\.\d+\.\d+/);
+assertOutput('license', ['.'], 'MIT');
+assertOutput('cli', ['help'], /^Usage: slt info <CMD> \[ARGS\]/);
 assertOutput('get', ['.', 'name'], 'strong-tools');
 assertOutput('get', ['.', 'bugs.url'],
              'https://github.com/strongloop/strong-tools/issues');
