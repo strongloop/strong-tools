@@ -80,8 +80,8 @@ function gitChangelog(nextVersion) {
       t = Promise.resolve(TODAY);
       v = Promise.resolve(cleanVersion(nextVersion || '0.0.0'));
     } else {
-      t = gitDateOf(_.first(tags));
-      v = Promise.resolve(cleanVersion(_.first(tags)));
+      t = gitDateOf(_.head(tags));
+      v = Promise.resolve(cleanVersion(_.head(tags)));
     }
     return Promise.join(t, v, entries, formatRelease);
   }
@@ -152,12 +152,12 @@ function gitTagsByTopo() {
   return Promise.join(allTags, tagRevs, branchRevs, function(tags, revs, brs) {
     tags = _.zip(tags, revs);
     brs = brs.reverse();
-    return _(tags).select(function(t) {
+    return _(tags).filter(function(t) {
       return _.includes(brs, t[1]);
     }).sortBy(function(t) {
       return brs.indexOf(t[1]);
     })
-    .pluck(0)
+    .map(0)
     .value();
   });
 }
