@@ -1,3 +1,31 @@
+2016-05-26, Version 4.5.1
+=========================
+
+ * fix: handle https git urls (Ryan Graham)
+
+ * test: include git for project tests (Ryan Graham)
+
+ * fix: handle malformed repository field (Ryan Graham)
+
+ * test: custom license templates (Ryan Graham)
+
+ * test: version inc help message (Ryan Graham)
+
+ * test: non-package version increment (Ryan Graham)
+
+ * test: reorganize version tests (Ryan Graham)
+
+ * test: expand coverage of license tests (Ryan Graham)
+
+ * test: add minimal test for semver wrapper (Ryan Graham)
+
+ * test: make 'slt info' tests more complete (Ryan Graham)
+
+ * slt: make ./ the default path for linting (Ryan Graham)
+
+ * deps: remove normalize-license-data (Ryan Graham)
+
+
 2016-05-26, Version 4.5.0
 =========================
 
