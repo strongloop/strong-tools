@@ -76,5 +76,16 @@ test('CLI', function(t) {
     ]);
     t.end();
   });
+  test('help', function(t) {
+    tools.version.GIT_COMMIT = 'aaaabbbbbccccccddddd';
+    tools.version.BUILD_NUMBER = '10';
+    var output = [];
+    tools.version.cli.out = function() {
+      output.push(fmt.apply(null, arguments));
+    };
+    tools.version.cli('help');
+    t.match(output[0], /^Usage: slt version/);
+    t.end();
+  });
   t.end();
 });
