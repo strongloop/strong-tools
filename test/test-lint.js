@@ -45,12 +45,33 @@ test('bad version', function(t) {
   t.end();
 });
 
-test('bad repo', function(t) {
+test('string repo', function(t) {
   var badRepo = lint({ repository: 'BAD' });
-  t.ok(badRepo,
-       'Repository as a string');
-  t.ok(_.includes(badRepo, 'Repository "BAD" is a string, not an object'),
-       '  is not valid');
+  t.ok(badRepo, 'returns a report');
+  t.ok(_.includes(badRepo, 'Repository "BAD" is a string, not an object'));
+  t.end();
+});
+
+test('object repo', function(t) {
+  var badRepo = lint({ repository: {}});
+  t.ok(badRepo, 'returns a report');
+  t.ok(_.includes(badRepo, 'Repository is missing "type" property'));
+  t.ok(_.includes(badRepo, 'Repository is missing "url" property'));
+  t.end();
+});
+
+test('null repo', function(t) {
+  var badRepo = lint({ repository: null});
+  t.ok(badRepo, 'returns a report');
+  t.ok(_.includes(badRepo, 'Repository property is malformed: null'));
+  t.end();
+});
+
+test('bad license', function(t) {
+  var badLicense = lint({ license: 'not even close to SPDX' });
+  var expected = 'License not valid SPDX expression: "not even close to SPDX"';
+  t.ok(badLicense, 'Repository as a string');
+  t.ok(_.includes(badLicense, expected));
   t.end();
 });
 
