@@ -21,38 +21,42 @@ test('setup', function(t) {
 });
 
 test('API', function(t) {
-  t.ok(tools.version, 'version is exported');
-  t.ok(tools.version.inc, 'version exports .inc()');
-  t.ok(tools.version.cli, 'version exports a CLI');
+  t.test('exports', function(t) {
+    t.ok(tools.version, 'version is exported');
+    t.ok(tools.version.inc, 'version exports .inc()');
+    t.ok(tools.version.cli, 'version exports a CLI');
+    t.end();
+  });
+  t.test('increment', function(t) {
+    var incs = {
+      '1.0.0': '1.0.1-0',
+      '0.0.0': '0.0.1-0',
+      '1.0.0-0': '1.0.0-1',
+      '1.2.3-4': '1.2.3-5',
+    };
+    for (var i in incs) {
+      t.strictEqual(tools.version.inc(i).toString(),
+                    incs[i],
+                    '-- increments ' + i + ' to ' + incs[i]);
+    }
+    t.end();
+  });
   t.end();
 });
 
-test('increment (API)', function(t) {
-  var incs = {
-    '1.0.0': '1.0.1-0',
-    '0.0.0': '0.0.1-0',
-    '1.0.0-0': '1.0.0-1',
-    '1.2.3-4': '1.2.3-5',
-  };
-  for (var i in incs) {
-    t.strictEqual(tools.version.inc(i).toString(),
-                  incs[i],
-                  '-- increments ' + i + ' to ' + incs[i]);
-  }
+test('CLI', function(t) {
+  test('increment (CLI)', function(t) {
+    var original = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
+    tools.version.GIT_COMMIT = 'aaaabbbbbccccccddddd';
+    tools.version.BUILD_NUMBER = '10';
+    tools.version.cli.out = function() {};
+    tools.version.cli('inc', SANDBOX_PKG);
+    var updated = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
+    t.notEqual(updated.version, original.version,
+               '-- should change version in package');
+    t.strictEqual(updated.version, '1.0.0-10.aaaabbb',
+                  '-- should increment missing version to 1.0.0-1');
+    t.end();
+  });
   t.end();
 });
-
-test('increment (CLI)', function(t) {
-  var original = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
-  tools.version.GIT_COMMIT = 'aaaabbbbbccccccddddd';
-  tools.version.BUILD_NUMBER = '10';
-  tools.version.cli.out = function() {};
-  tools.version.cli('inc', SANDBOX_PKG);
-  var updated = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
-  t.notEqual(updated.version, original.version,
-             '-- should change version in package');
-  t.strictEqual(updated.version, '1.0.0-10.aaaabbb',
-                '-- should increment missing version to 1.0.0-1');
-  t.end();
-});
-
