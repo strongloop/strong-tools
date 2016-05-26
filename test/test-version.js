@@ -3,6 +3,7 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
+var fmt = require('util').format;
 var fs = require('fs');
 var path = require('path');
 var rimraf = require('rimraf');
@@ -45,7 +46,7 @@ test('API', function(t) {
 });
 
 test('CLI', function(t) {
-  test('increment (CLI)', function(t) {
+  test('increment package', function(t) {
     var original = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
     tools.version.GIT_COMMIT = 'aaaabbbbbccccccddddd';
     tools.version.BUILD_NUMBER = '10';
@@ -56,6 +57,23 @@ test('CLI', function(t) {
                '-- should change version in package');
     t.strictEqual(updated.version, '1.0.0-10.aaaabbb',
                   '-- should increment missing version to 1.0.0-1');
+    t.end();
+  });
+  test('increment version', function(t) {
+    tools.version.GIT_COMMIT = 'aaaabbbbbccccccddddd';
+    tools.version.BUILD_NUMBER = '10';
+    var output = [];
+    tools.version.cli.out = function() {
+      output.push(fmt.apply(null, arguments));
+    };
+    tools.version.cli('inc', '1.2.3');
+    tools.version.cli('inc', '1.2.4-10.aaaabbb');
+    tools.version.cli('inc', '0.0.0');
+    t.deepEqual(output, [
+      '1.2.3 => 1.2.4-10.aaaabbb',
+      '1.2.4-10.aaaabbb => 1.2.4-11.aaaabbb',
+      '0.0.0 => 0.0.1-10.aaaabbb',
+    ]);
     t.end();
   });
   t.end();
