@@ -16,7 +16,6 @@ test('setup', function(t) {
   rimraf.sync(SANDBOX);
   fs.mkdirSync(SANDBOX);
   fs.writeFileSync(SANDBOX_PKG, JSON.stringify({name: 'testing'}), 'utf8');
-  tools.license.cli.out = function() {};
   t.pass('sandbox created');
   t.end();
 });
@@ -31,6 +30,7 @@ test('license writing', function(t) {
   var original = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
   process.chdir(SANDBOX);
   t.test('MIT', function(t) {
+    tools.license.cli.out = t.comment;
     return tools.license.cli('--mit').then(function() {
       var updated = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
       t.notEqual(updated.license, original.license,
@@ -40,6 +40,7 @@ test('license writing', function(t) {
     });
   });
   t.test('Apache', function(t) {
+    tools.license.cli.out = t.comment;
     return tools.license.cli('--apache').then(function() {
       var updated = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
       t.notEqual(updated.license, original.license,
@@ -49,6 +50,7 @@ test('license writing', function(t) {
     });
   });
   t.test('Artistic', function(t) {
+    tools.license.cli.out = t.comment;
     return tools.license.cli('--artistic').then(function() {
       var updated = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
       t.notEqual(updated.license, original.license,
@@ -56,6 +58,84 @@ test('license writing', function(t) {
       t.strictEqual(updated.license, 'Artistic-2.0',
                     '-- should be set to Artistic-2.0');
     });
+  });
+  t.end();
+});
+
+test('license fixing', function(t) {
+  t.test('mit', function(t) {
+    tools.license.cli.out = t.comment;
+    var original = {name: 'testing', license: 'mit'};
+    fs.writeFileSync(SANDBOX_PKG, JSON.stringify(original), 'utf8');
+    process.chdir(SANDBOX);
+    return tools.license.cli().then(function() {
+      var updated = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
+      t.notEqual(updated.license, original.license,
+                 '-- should change license in package');
+      t.strictEqual(updated.license, 'MIT',
+                    '-- should be set to MIT');
+    });
+  });
+  t.test('artistic', function(t) {
+    tools.license.cli.out = t.comment;
+    var original = {name: 'testing', license: 'artistic'};
+    fs.writeFileSync(SANDBOX_PKG, JSON.stringify(original), 'utf8');
+    process.chdir(SANDBOX);
+    return tools.license.cli().then(function() {
+      var updated = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
+      t.notEqual(updated.license, original.license,
+                 '-- should change license in package');
+      t.strictEqual(updated.license, 'Artistic-2.0',
+                    '-- should be set to Artistic-2.0');
+    });
+  });
+  t.test('apache', function(t) {
+    tools.license.cli.out = t.comment;
+    var original = {name: 'testing', license: 'apache'};
+    fs.writeFileSync(SANDBOX_PKG, JSON.stringify(original), 'utf8');
+    process.chdir(SANDBOX);
+    return tools.license.cli().then(function() {
+      var updated = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
+      t.notEqual(updated.license, original.license,
+                 '-- should change license in package');
+      t.strictEqual(updated.license, 'Apache-2.0',
+                    '-- should be set to Apache-2.0');
+    });
+  });
+  t.test('object', function(t) {
+    t.test('dual mit', function(t) {
+      tools.license.cli.out = t.comment;
+      var original = {
+        name: 'testing',
+        license: {name: 'Dual MIT/StrongLoop', url: 'https://'},
+      };
+      fs.writeFileSync(SANDBOX_PKG, JSON.stringify(original), 'utf8');
+      process.chdir(SANDBOX);
+      return tools.license.cli().then(function() {
+        var updated = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
+        t.notEqual(updated.license, original.license,
+                   '-- should change license in package');
+        t.strictEqual(updated.license, 'MIT',
+                      '-- should be set to MIT');
+      });
+    });
+    t.test('dual artistic', function(t) {
+      tools.license.cli.out = t.comment;
+      var original = {
+        name: 'testing',
+        license: {name: 'Dual Artistic/StrongLoop', url: 'https://'},
+      };
+      fs.writeFileSync(SANDBOX_PKG, JSON.stringify(original), 'utf8');
+      process.chdir(SANDBOX);
+      return tools.license.cli().then(function() {
+        var updated = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
+        t.notEqual(updated.license, original.license,
+                   '-- should change license in package');
+        t.strictEqual(updated.license, 'Artistic-2.0',
+                      '-- should be set to Artistic-2.0');
+      });
+    });
+    t.end();
   });
   t.end();
 });
