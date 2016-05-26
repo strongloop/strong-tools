@@ -35,7 +35,7 @@
     "normalize-package-data": "^2.3.2",
     "request": "^2.49.0",
     "semver": "^5.0.1",
-    "spdx": "^0.4.0",
+    "spdx-expression-validate": "^1.0.1",
     "sync-exec": "^0.6.2"
   },
   "bin": {
