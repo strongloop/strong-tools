@@ -49,3 +49,15 @@ test('package parsing', function(t) {
                    'persists the updated version');
   t.end();
 });
+
+test('package info gathering', function(t) {
+  var self = new Project(require.resolve('../package.json'));
+  self.gather(function(err, project) {
+    t.ifErr(err, 'should not error out');
+    t.same(self, project);
+    // fake out the name so we know it wasn't used to generate the gh slug
+    project.normalizedPkgJSON.name = 'not-really';
+    t.equal(project.ghSlug(), 'strongloop/strong-tools');
+    t.end();
+  });
+});
