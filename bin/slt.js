@@ -5,6 +5,7 @@
 // License text available at https://opensource.org/licenses/MIT
 
 var _ = require('lodash');
+var bluebird = require('bluebird');
 var fs = require('fs');
 var path = require('path');
 var tools = require('../');
@@ -14,7 +15,10 @@ var pkg = path.resolve(process.argv[3] || './package.json');
 
 if (cmd in tools) {
   if (tools[cmd].cli)
-    tools[cmd].cli.apply(null, process.argv.slice(3));
+    bluebird.resolve(tools[cmd].cli.apply(null, process.argv.slice(3)))
+            .catch(function() {
+              process.exit(1);
+            });
   else
     defaultCLI(tools[cmd], pkg);
 } else {
