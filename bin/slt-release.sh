@@ -15,6 +15,16 @@ or a valid version increment:
 If VERSION is NOT specified, then the version field in package.json is
 used.
 
+What slt-release will do:
+ - generate a CHANGES.md file
+ - increment package version in package.json and bower.json (if present)
+ - commit CHANGES.md, package.json, bower.json, and npm-shrinkwrap.json
+ - tag commit with an annotated tag
+ - merge tag back in to base branch
+   - IF npm-shrinkwrap.json was not previously part of that branch then
+     it is filtered out of the merge. If you want the shrinkwrap to be
+     permanent then it must be commited before running slt-release.
+
 slt-release will abort if:
  - the tag matching the version already exists
  - the version has already been published
