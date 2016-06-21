@@ -122,13 +122,14 @@ Commands:
   cla         Create or verify contribution guidelines
   license [F] Set package licensing to standard form F
       Form is auto-detected by default, it can be set explicitly to one of:
-      --mit, --dual-mit, --artistic, --dual-artistic, or --strongloop
+        --mit, --apache, --artistic
   copyright [F..]
               Insert/update copyright headers in JS source files. Uses git for
               copyright years and package.json for license reference.
   info        Display metadata about package
   version     Version manipulation
   semver      Wrapper for semver command from semver package
+  shrinkwrap  Modify npm-shrinkwrap.json to remove all URLs
   help        Print this usage guide
 
 Confirm license changes are acceptable with:
