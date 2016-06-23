@@ -8,10 +8,6 @@ Install from npmjs.org:
 
     npm install -g strong-tools
 
-install from github master, the latest:
-
-   npm install -g strongloop/strong-tools
-
 ## Current commands
 
  * `slt-release`
