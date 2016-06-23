@@ -181,3 +181,10 @@ slt license
 
 No auto-detection:
 - slt license --mit/--artistic/--custom
+
+#### slt copyright
+
+Looks at all the .js files in the current git repo and adds/updates a
+standard copyright notice to the top. The exact wording of the copyright
+statement is based on the license declared in package.json, your git author
+details, and the first and last commits made to a file (years only).
