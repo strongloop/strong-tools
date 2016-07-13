@@ -3,6 +3,8 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
+'use strict';
+
 var fs = require('fs');
 var path = require('path');
 var rimraf = require('rimraf');
@@ -147,4 +149,3 @@ test('wth old blip install script', function(t) {
                      '-- blip script content is replaced');
   t.end();
 });
-
