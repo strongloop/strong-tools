@@ -4,6 +4,8 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
+'use strict';
+
 var _ = require('lodash');
 var bluebird = require('bluebird');
 var fs = require('fs');
