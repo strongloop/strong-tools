@@ -208,11 +208,19 @@ then
   fi
   if test "$(slt info get . publishConfig.export-tests)" != "true"; then
     # ignore the entire test tree
-    echo "test" >> .npmignore
+    if ! grep -q "^test$" .npmignore; then
+      echo "  ignoring the entire test/ directory"
+      echo "test" >> .npmignore
+    fi
   fi
-  echo ".travis.yml" >> .npmignore
+  if ! grep -q "^\.travis\.yml$" .npmignore; then
+    echo "  ignoring .travis.yml"
+    echo ".travis.yml" >> .npmignore
+  fi
+
   npm publish
   git checkout "$BASE"
+  echo "You can revert .npmignore changes now (if there were any)."
 else
   echo "Publish to npmjs.com when ready:"
   echo "  git checkout $TAG && npm publish"
