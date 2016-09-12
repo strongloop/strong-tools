@@ -1,3 +1,27 @@
+2016-09-12, Version 4.5.2
+=========================
+
+ * slt-release: don't add npmignore entries twice (Miroslav Bajtoš)
+
+ * Update URLs in CONTRIBUTING.md (#68) (Ryan Graham)
+
+ * Add 'use strict' to modules (Kevin Delisle)
+
+ * doc: add 'slt copyright' description (Ryan Graham)
+
+ * doc: remove github installation (Ryan Graham)
+
+ * slt: add shrinkwrap command to help listing (Ryan Graham)
+
+ * slt-release: document npm-shrinkwrap.json handling (Ryan Graham)
+
+ * slt: fix silent shrinkwrap failures (Ryan Graham)
+
+ * slt: handle CLIs that return Promises (Ryan Graham)
+
+ * slt: remove duplicate shrinkwrap message (Ryan Graham)
+
+
 2016-05-26, Version 4.5.1
 =========================
 
