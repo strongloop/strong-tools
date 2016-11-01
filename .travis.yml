@@ -8,4 +8,4 @@ node_js:
 git:
   depth: 10000 # need the whole thing
 after_script:
-  - ./node_modules/.bin/tap --coverage --coverage-report=text-lcov | ./node_modules/.bin/codacy-coverage
+  - "./node_modules/.bin/tap --coverage --coverage-report=text-lcov | ./node_modules/.bin/codacy-coverage"
