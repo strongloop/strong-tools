@@ -42,6 +42,7 @@
     "slt-changelog": "bin/slt-changelog.js"
   },
   "devDependencies": {
+    "codacy-coverage": "^2.0.0",
     "eslint": "^2",
     "eslint-config-strongloop": "^2",
     "rimraf": "^2.2.8",
