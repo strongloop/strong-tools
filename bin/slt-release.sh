@@ -66,7 +66,7 @@ do
     p)  export SLT_RELEASE_PUBLISH=y;;
   esac
 done
-shift `expr $OPTIND - 1`
+shift $((OPTIND - 1))
 
 case $1 in
   "")
