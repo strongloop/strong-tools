@@ -4,7 +4,6 @@
   "description": "Package maintenance tools from StrongLoop",
   "main": "index.js",
   "scripts": {
-    "pretest": "eslint --ignore-path .gitignore ./",
     "test": "tap --coverage test/test-*",
     "posttest": "tap --coverage-report=cobertura"
   },
