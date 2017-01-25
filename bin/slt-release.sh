@@ -193,7 +193,7 @@ then
   echo "Pushing tag $TAG and branch $BASE to origin"
   git push origin $TAG:$TAG $BASE:$BASE
 else
-  echo "Push tag $TAG and branche $BASE to origin"
+  echo "Push tag $TAG and branch $BASE to origin"
   echo "  git push origin $TAG:$TAG $BASE:$BASE"
 fi
 
