@@ -84,79 +84,53 @@ test('license writing', function(t) {
 });
 
 test('license fixing', function(t) {
-  t.test('mit', function(t) {
-    tools.license.cli.out = t.comment;
-    var original = {name: 'testing', license: 'mit'};
-    fs.writeFileSync(SANDBOX_PKG, JSON.stringify(original), 'utf8');
-    process.chdir(SANDBOX);
-    return tools.license.cli().then(function() {
-      var updated = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
-      t.notEqual(updated.license, original.license,
-                 '-- should change license in package');
-      t.strictEqual(updated.license, 'MIT',
-                    '-- should be set to MIT');
-    });
-  });
-  t.test('artistic', function(t) {
-    tools.license.cli.out = t.comment;
-    var original = {name: 'testing', license: 'artistic'};
-    fs.writeFileSync(SANDBOX_PKG, JSON.stringify(original), 'utf8');
-    process.chdir(SANDBOX);
-    return tools.license.cli().then(function() {
-      var updated = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
-      t.notEqual(updated.license, original.license,
-                 '-- should change license in package');
-      t.strictEqual(updated.license, 'Artistic-2.0',
-                    '-- should be set to Artistic-2.0');
-    });
-  });
-  t.test('apache', function(t) {
-    tools.license.cli.out = t.comment;
-    var original = {name: 'testing', license: 'apache'};
-    fs.writeFileSync(SANDBOX_PKG, JSON.stringify(original), 'utf8');
-    process.chdir(SANDBOX);
-    return tools.license.cli().then(function() {
-      var updated = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
-      t.notEqual(updated.license, original.license,
-                 '-- should change license in package');
-      t.strictEqual(updated.license, 'Apache-2.0',
-                    '-- should be set to Apache-2.0');
-    });
-  });
-  t.test('object', function(t) {
-    t.test('dual mit', function(t) {
-      tools.license.cli.out = t.comment;
-      var original = {
+  var cases = [
+    {
+      name: 'mit',
+      given: {name: 'testing', license: 'mit'},
+      expect: {name: 'testing', license: 'MIT'},
+    },
+    {
+      name: 'artistic',
+      given: {name: 'testing', license: 'artistic'},
+      expect: {name: 'testing', license: 'Artistic-2.0'},
+    },
+    {
+      name: 'apache',
+      given: {name: 'testing', license: 'apache'},
+      expect: {name: 'testing', license: 'Apache-2.0'},
+    },
+
+    // Collapse dual-licenses to only their FOSS component
+    {
+      name: 'Dual MIT/StrongLoop',
+      given: {
         name: 'testing',
         license: {name: 'Dual MIT/StrongLoop', url: 'https://'},
-      };
-      fs.writeFileSync(SANDBOX_PKG, JSON.stringify(original), 'utf8');
-      process.chdir(SANDBOX);
-      return tools.license.cli().then(function() {
-        var updated = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
-        t.notEqual(updated.license, original.license,
-                   '-- should change license in package');
-        t.strictEqual(updated.license, 'MIT',
-                      '-- should be set to MIT');
-      });
-    });
-    t.test('dual artistic', function(t) {
-      tools.license.cli.out = t.comment;
-      var original = {
+      },
+      expect: {name: 'testing', license: 'MIT'},
+    },
+    {
+      name: 'Dual Artistic/StrongLoop',
+      given: {
         name: 'testing',
         license: {name: 'Dual Artistic/StrongLoop', url: 'https://'},
-      };
+      },
+      expect: {name: 'testing', license: 'Artistic-2.0'},
+    },
+
+  ];
+  cases.forEach(function(test) {
+    t.test(test.name, function(t) {
+      tools.license.cli.out = t.comment;
+      var original = test.given;
       fs.writeFileSync(SANDBOX_PKG, JSON.stringify(original), 'utf8');
       process.chdir(SANDBOX);
       return tools.license.cli().then(function() {
         var updated = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
-        t.notEqual(updated.license, original.license,
-                   '-- should change license in package');
-        t.strictEqual(updated.license, 'Artistic-2.0',
-                      '-- should be set to Artistic-2.0');
+        t.strictEqual(updated.license, test.expect.license);
       });
     });
-    t.end();
   });
   t.end();
 });
