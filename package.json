@@ -1,6 +1,6 @@
 {
   "name": "strong-tools",
-  "version": "4.5.2",
+  "version": "5.0.0-0",
   "description": "Package maintenance tools from StrongLoop",
   "main": "index.js",
   "scripts": {
@@ -38,7 +38,6 @@
   "bin": {
     "slt": "bin/slt.js",
     "slt-release": "bin/slt-release.sh",
-    "slt-stage": "bin/slt-stage.rb",
     "slt-changelog": "bin/slt-changelog.js"
   },
   "devDependencies": {
@@ -47,9 +46,6 @@
     "eslint-config-strongloop": "^2",
     "rimraf": "^2.2.8",
     "tap": "^5.x"
-  },
-  "engine": {
-    "ruby": "^2.0.0"
   },
   "optionalDependencies": {}
 }
