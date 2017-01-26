@@ -53,9 +53,39 @@ test('package info gathering', function(t) {
   self.gather(function(err, project) {
     t.ifErr(err, 'should not error out');
     t.same(self, project);
+    t.equal(project.get('license'), 'MIT');
+    t.equal(project.license(), 'MIT');
     // fake out the name so we know it wasn't used to generate the gh slug
     project.normalizedPkgJSON.name = 'not-really';
     t.equal(project.ghSlug(), 'strongloop/strong-tools');
+    t.end();
+  });
+});
+
+test('optionalDep getter/setter', function(t) {
+  var self = new Project(require.resolve('../package.json'));
+  self.gather(function(err, project) {
+    t.ifErr(err, 'should not error out');
+    t.same(self, project);
+    t.notOk(self.optionalDep('not-real'));
+    self.optionalDep('not-real', '1.0.0');
+    t.equal(self.optionalDep('not-real'), '1.0.0');
+    self.optionalDep('not-real', null);
+    t.notOk(self.optionalDep('not-real'));
+    t.end();
+  });
+});
+
+test('script getter/setter', function(t) {
+  var self = new Project(require.resolve('../package.json'));
+  self.gather(function(err, project) {
+    t.ifErr(err, 'should not error out');
+    t.same(self, project);
+    t.notOk(self.script('not-real'));
+    self.script('not-real', 'foo');
+    t.equal(self.script('not-real'), 'foo');
+    self.script('not-real', null);
+    t.notOk(self.script('not-real'));
     t.end();
   });
 });
