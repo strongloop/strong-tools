@@ -7,8 +7,8 @@
 
 var fmt = require('util').format;
 var fs = require('fs');
+var helpers = require('./helpers');
 var path = require('path');
-var rimraf = require('rimraf');
 var test = require('tap').test;
 var tools = require('../');
 
@@ -16,11 +16,7 @@ var SANDBOX = path.resolve(__dirname, 'SANDBOX-version');
 var SANDBOX_PKG = path.resolve(SANDBOX, 'package.json');
 
 test('setup', function(t) {
-  rimraf.sync(SANDBOX);
-  fs.mkdirSync(SANDBOX);
-  fs.writeFileSync(SANDBOX_PKG, JSON.stringify({name: 'testing'}), 'utf8');
-  t.pass('sandbox created');
-  t.end();
+  helpers.resetSandboxSync(t, SANDBOX, SANDBOX_PKG, {name: 'testing'});
 });
 
 test('API', function(t) {
