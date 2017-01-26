@@ -15,7 +15,10 @@ var SANDBOX = path.resolve(__dirname, 'SANDBOX-project');
 var SANDBOX_PKG = path.resolve(SANDBOX, 'package.json');
 
 test('setup', function(t) {
-  helpers.resetSandboxSync(t, SANDBOX, SANDBOX_PKG, {name: 'testing'});
+  helpers.resetSandboxSync(t, SANDBOX, SANDBOX_PKG, {
+    name: 'testing',
+    repository: 'git@github.com:myOrg/testing.git',
+  });
 });
 
 test('API', function(t) {
@@ -45,6 +48,8 @@ test('package parsing', function(t) {
   t.notEqual(updated, original, 'file has changed');
   t.strictEqual(updated.version, '1.0.0-0',
                    'persists the updated version');
+  // test ghSlug generation BEFORE we've looked at git repo
+  t.equal(p1.ghSlug(), 'myOrg/testing');
   t.end();
 });
 
