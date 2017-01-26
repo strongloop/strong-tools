@@ -6,6 +6,7 @@
 'use strict';
 
 var wrapped = require('./lib/wrapped');
+var unused = 'unused';
 
 module.exports = {
   lint: require('./lib/lint'),
@@ -18,3 +19,5 @@ module.exports = {
   copyright: require('./lib/copyright'),
   shrinkwrap: require('./lib/shrinkwrap'),
 };
+
+undeclared = 'undeclared';

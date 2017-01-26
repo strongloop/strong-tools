@@ -1,6 +1,9 @@
 strong-tools
 ============
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/de2c5d28e28845f09a7799d045defcde)](https://www.codacy.com/app/rmg/strong-tools?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=strongloop/strong-tools&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/de2c5d28e28845f09a7799d045defcde)](https://www.codacy.com/app/rmg/strong-tools?utm_source=github.com&utm_medium=referral&utm_content=strongloop/strong-tools&utm_campaign=Badge_Coverage)
+
 Helpers for building, testing, staging, and releasing modules the way StrongLoop
 does.
 
