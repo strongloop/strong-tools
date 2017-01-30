@@ -6,8 +6,8 @@
 'use strict';
 
 var fs = require('fs');
+var helpers = require('./helpers');
 var path = require('path');
-var rimraf = require('rimraf');
 var test = require('tap').test;
 var tools = require('../');
 
@@ -34,10 +34,10 @@ tools.version.cli.out = function(output) {
 };
 
 test('setup', function(t) {
-  rimraf.sync(SANDBOX);
-  fs.mkdirSync(SANDBOX);
-  fs.writeFileSync(SANDBOX_PKG, JSON.stringify({name: 'testing'}), 'utf8');
-  t.pass('sandbox created');
+  helpers.resetSandboxSync(t, SANDBOX, SANDBOX_PKG, {name: 'testing'});
+});
+
+test('API sanity', function(t) {
   t.ok(tools.version.set, 'version exports .set()');
   t.end();
 });

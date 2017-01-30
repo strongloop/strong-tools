@@ -5,8 +5,10 @@
 
 'use strict';
 
+var _ = require('lodash');
 var Project = require('../lib/project');
 var fs = require('fs');
+var fmt = require('util').format;
 var path = require('path');
 var rimraf = require('rimraf');
 var test = require('tap').test;
@@ -14,7 +16,7 @@ var test = require('tap').test;
 var cla = require('../').cla;
 var output = [];
 function logger() {
-  output.push(arguments);
+  output.push(fmt.apply(null, arguments));
 }
 
 var SANDBOX = path.resolve(__dirname, 'SANDBOX-cla');
@@ -66,4 +68,18 @@ test('CONTRIBUTING.md exists, but is wrong', function(t) {
          'A CONTRIBUTIONG.md.suggested is created');
     t.end();
   });
+});
+
+test('CONTRIBUTING.md exists but is not a file, unsupported', function(t) {
+  rimraf.sync(SANDBOX_CONTRIB);
+  fs.mkdirSync(SANDBOX_CONTRIB);
+  // empty logger output
+  output.slice(0);
+  t.throws(function() {
+    cla(sandbox_pkg, logger, function() {
+      t.fail('should not get called');
+    });
+  });
+  t.match(_.last(output), /Error reading existing CONTRIBUTING\.md/);
+  t.end();
 });

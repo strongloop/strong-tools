@@ -6,8 +6,8 @@
 'use strict';
 
 var fs = require('fs');
+var helpers = require('./helpers');
 var path = require('path');
-var rimraf = require('rimraf');
 var test = require('tap').test;
 var Project = require('../lib/project');
 
@@ -15,11 +15,10 @@ var SANDBOX = path.resolve(__dirname, 'SANDBOX-project');
 var SANDBOX_PKG = path.resolve(SANDBOX, 'package.json');
 
 test('setup', function(t) {
-  rimraf.sync(SANDBOX);
-  fs.mkdirSync(SANDBOX);
-  fs.writeFileSync(SANDBOX_PKG, JSON.stringify({name: 'testing'}), 'utf8');
-  t.pass('sandbox created');
-  t.end();
+  helpers.resetSandboxSync(t, SANDBOX, SANDBOX_PKG, {
+    name: 'testing',
+    repository: 'git@github.com:myOrg/testing.git',
+  });
 });
 
 test('API', function(t) {
@@ -49,6 +48,8 @@ test('package parsing', function(t) {
   t.notEqual(updated, original, 'file has changed');
   t.strictEqual(updated.version, '1.0.0-0',
                    'persists the updated version');
+  // test ghSlug generation BEFORE we've looked at git repo
+  t.equal(p1.ghSlug(), 'myOrg/testing');
   t.end();
 });
 
@@ -57,9 +58,39 @@ test('package info gathering', function(t) {
   self.gather(function(err, project) {
     t.ifErr(err, 'should not error out');
     t.same(self, project);
+    t.equal(project.get('license'), 'MIT');
+    t.equal(project.license(), 'MIT');
     // fake out the name so we know it wasn't used to generate the gh slug
     project.normalizedPkgJSON.name = 'not-really';
     t.equal(project.ghSlug(), 'strongloop/strong-tools');
+    t.end();
+  });
+});
+
+test('optionalDep getter/setter', function(t) {
+  var self = new Project(require.resolve('../package.json'));
+  self.gather(function(err, project) {
+    t.ifErr(err, 'should not error out');
+    t.same(self, project);
+    t.notOk(self.optionalDep('not-real'));
+    self.optionalDep('not-real', '1.0.0');
+    t.equal(self.optionalDep('not-real'), '1.0.0');
+    self.optionalDep('not-real', null);
+    t.notOk(self.optionalDep('not-real'));
+    t.end();
+  });
+});
+
+test('script getter/setter', function(t) {
+  var self = new Project(require.resolve('../package.json'));
+  self.gather(function(err, project) {
+    t.ifErr(err, 'should not error out');
+    t.same(self, project);
+    t.notOk(self.script('not-real'));
+    self.script('not-real', 'foo');
+    t.equal(self.script('not-real'), 'foo');
+    self.script('not-real', null);
+    t.notOk(self.script('not-real'));
     t.end();
   });
 });

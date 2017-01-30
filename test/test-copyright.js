@@ -83,6 +83,7 @@ test('header updating', function(t) {
     return copyright.ensure(fakeFile, mit).then(function(contents) {
       var latest = fs.readFileSync(fakeFile, 'utf8');
       t.match(contents, fakeJS, 'should contain original content');
+      t.notStrictEqual(contents, fakeJS, 'should modify content');
       t.equal(contents, latest, 'should update the file as well as return it');
     });
   });
@@ -90,9 +91,7 @@ test('header updating', function(t) {
     var alreadySet = fs.readFileSync(fakeFile, 'utf8');
     return copyright.ensure(fakeFile, mit).then(function(contents) {
       var latest = fs.readFileSync(fakeFile, 'utf8');
-      t.match(contents, fakeJS, 'should contain original content');
-      t.equal(contents, latest, 'should update the file as well as return it');
-      t.equal(contents, alreadySet, 'should be idempotent');
+      t.equal(latest, alreadySet, 'should be idempotent');
     });
   });
   t.end();
@@ -107,17 +106,12 @@ test('shebang handling', function(t) {
 
   t.test('when no header exists', function(t) {
     return copyright.ensure(fakeFile, mit).then(function(contents) {
-      var latest = fs.readFileSync(fakeFile, 'utf8');
       t.match(contents, fakeJS, 'should contain original content');
-      t.equal(contents, latest, 'should update the file as well as return it');
     });
   });
   t.test('when header already exists', function(t) {
     var alreadySet = fs.readFileSync(fakeFile, 'utf8');
     return copyright.ensure(fakeFile, mit).then(function(contents) {
-      var latest = fs.readFileSync(fakeFile, 'utf8');
-      t.match(contents, fakeJS, 'should contain original content');
-      t.equal(contents, latest, 'should update the file as well as return it');
       t.equal(contents, alreadySet, 'should be idempotent');
     });
   });
