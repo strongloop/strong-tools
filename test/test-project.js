@@ -44,6 +44,7 @@ test('package parsing', function(t) {
   t.ok(!('version' in p1.rawPkgJSON),
        'does not modify data on load');
   t.strictEqual(p1.nameVer(), 'testing@1.0.0-0');
+  t.strictEqual(p1.license(), 'SEE LICENSE.md');
   t.strictEqual(p1.version(), '1.0.0-0',
                    'reports 1.0.0-0 as version if missing');
   p1.version(p1.version());
@@ -148,5 +149,6 @@ test('package inference without package.json', function(t) {
   mkdirp.sync(SANDBOX_NOJSON);
   var p1 = new Project(SANDBOX_NOJSON);
   t.equal(p1.nameVer(), 'SANDBOX-no-json@1.0.0-0');
+  t.equal(p1.license(), 'SEE LICENSE.md');
   t.end();
 });
