@@ -55,9 +55,9 @@ test('package parsing', function(t) {
   t.end();
 });
 
-test('package info gathering', function(t) {
-  var self = new Project(require.resolve('../package.json'));
-  self.gather(function(err, project) {
+test('package info gathering with git', function(t) {
+  var pkgPath = require.resolve('../package.json');
+  var self = new Project(pkgPath, function(err, project) {
     t.ifErr(err, 'should not error out');
     t.same(self, project);
     t.equal(project.get('license'), 'MIT');
@@ -65,6 +65,19 @@ test('package info gathering', function(t) {
     // fake out the name so we know it wasn't used to generate the gh slug
     project.normalizedPkgJSON.name = 'not-really';
     t.equal(project.ghSlug(), 'strongloop/strong-tools');
+    t.end();
+  });
+});
+
+test('package info gathering without git', function(t) {
+  var self = new Project(require.resolve('../package.json'));
+  self.git = null;
+  self.gather(function(err, project) {
+    t.ifErr(err, 'should not error out');
+    t.notOk(project.git, 'project has no git reference');
+    t.same(self, project);
+    t.equal(project.get('license'), 'MIT');
+    t.equal(project.license(), 'MIT');
     t.end();
   });
 });
