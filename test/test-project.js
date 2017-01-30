@@ -95,3 +95,20 @@ test('script getter/setter', function(t) {
     t.end();
   });
 });
+
+test('github repo slug extraction', function(t) {
+  var testCases = [
+    ['https://github.com/myOrg/myRepo', 'myOrg/myRepo'],
+    ['https://github.com/myOrg/myRepo.git', 'myOrg/myRepo'],
+    ['git@github.com:myOrg/myRepo', 'myOrg/myRepo'],
+    ['git@github.com:myOrg/myRepo.git', 'myOrg/myRepo'],
+    ['git+ssh://git@github.com/myOrg/myRepo', 'myOrg/myRepo'],
+    ['git+ssh://git@github.com/myOrg/myRepo.git', 'myOrg/myRepo'],
+    ['https://github.corp.com/myOrg/myRepo', undefined],
+    ['https://bitbucket.org/myOrg/myRepo', undefined],
+  ];
+  t.plan(testCases.length);
+  testCases.forEach(function(tc) {
+    t.equal(Project.ghSlugFrom(tc[0]), tc[1]);
+  });
+});
