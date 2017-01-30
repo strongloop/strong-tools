@@ -13,6 +13,7 @@ var Project = require('../lib/project');
 
 var SANDBOX = path.resolve(__dirname, 'SANDBOX-project');
 var SANDBOX_PKG = path.resolve(SANDBOX, 'package.json');
+var SANDBOX_BOWER = path.resolve(SANDBOX, 'bower.json');
 
 test('setup', function(t) {
   helpers.resetSandboxSync(t, SANDBOX, SANDBOX_PKG, {
@@ -111,4 +112,17 @@ test('github repo slug extraction', function(t) {
   testCases.forEach(function(tc) {
     t.equal(Project.ghSlugFrom(tc[0]), tc[1]);
   });
+});
+
+test('bower support', function(t) {
+  var pkgjson = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
+  fs.writeFileSync(SANDBOX_BOWER, JSON.stringify(pkgjson), 'utf8');
+  var p1 = new Project(SANDBOX);
+  t.strictEqual(p1.version(), '1.0.0-0');
+  p1.version('2.3.4');
+  p1.persist();
+  var bower = JSON.parse(fs.readFileSync(SANDBOX_BOWER, 'utf8'));
+  t.strictEqual(p1.version(), '2.3.4');
+  t.strictEqual(bower.version, '2.3.4');
+  t.end();
 });
