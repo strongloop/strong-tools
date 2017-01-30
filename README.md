@@ -140,15 +140,13 @@ Usage: slt version <CMD> [ARGS]
 Commands:
   inc [PKG...]   Increment version of specified packages
   inc [VER...]   Increment versions, printing new versions to stdout
-  set VER [PKG]  Set version in PKG, also update sl-blip dep if present
+  set VER [PKG]  Set version in PKG
   help           Display this usage
 ```
 
 Currently the only practical `slt version` command is `set`, which operates
 similar to `npm version` with the following major differences:
  * does **not** commit any changes or create any tags
- * updates `sl-blip` dependency URL if, and only if, sl-blip is already
-   listed in `optionalDependencies`.
 
 #### slt info
 

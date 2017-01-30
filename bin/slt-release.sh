@@ -125,9 +125,6 @@ echo "Updating package version to $V"
 slt version set "$V"
 
 echo "Committing package and CHANGES for v$V"
-if [ -e .sl-blip.js ]; then
-  git add .sl-blip.js
-fi
 TO_ADD="$(git ls-files bower.json) package.json CHANGES.md"
 TO_REMOVE=""
 if [ -e npm-shrinkwrap.json ]; then
