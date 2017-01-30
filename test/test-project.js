@@ -7,7 +7,9 @@
 
 var fs = require('fs');
 var helpers = require('./helpers');
+var mkdirp = require('mkdirp');
 var path = require('path');
+var rimraf = require('rimraf');
 var test = require('tap').test;
 var Project = require('../lib/project');
 
@@ -137,5 +139,14 @@ test('bower support', function(t) {
   var bower = JSON.parse(fs.readFileSync(SANDBOX_BOWER, 'utf8'));
   t.strictEqual(p1.version(), '2.3.4');
   t.strictEqual(bower.version, '2.3.4');
+  t.end();
+});
+
+test('package inference without package.json', function(t) {
+  var SANDBOX_NOJSON = path.resolve(__dirname, 'SANDBOX-no-json');
+  rimraf.sync(SANDBOX_NOJSON);
+  mkdirp.sync(SANDBOX_NOJSON);
+  var p1 = new Project(SANDBOX_NOJSON);
+  t.equal(p1.nameVer(), 'SANDBOX-no-json@1.0.0-0');
   t.end();
 });
