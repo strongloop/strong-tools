@@ -40,6 +40,7 @@ test('package parsing', function(t) {
   var p1 = new Project(SANDBOX);
   t.ok(!('version' in p1.rawPkgJSON),
        'does not modify data on load');
+  t.strictEqual(p1.nameVer(), 'testing@1.0.0-0');
   t.strictEqual(p1.version(), '1.0.0-0',
                    'reports 1.0.0-0 as version if missing');
   p1.version(p1.version());
