@@ -39,3 +39,13 @@ test('shrinkwrapping', function(t) {
     t.equal(updated, EXPECTED, 'should change shrinkwrap to match expected');
   });
 });
+
+test('bad shrinkwrap file', function(t) {
+  tools.shrinkwrap.cli.out = function() {};
+  return tools.shrinkwrap.cli(SANDBOX_FILE + '-missing').then(function() {
+    t.fail('should have errored out');
+  }).catch(function(err) {
+    t.type(err, Error);
+    t.match(err.message, 'ENOENT');
+  });
+});
