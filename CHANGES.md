@@ -1,3 +1,59 @@
+2017-02-24, Version 5.0.0
+=========================
+
+ * refresh copyright notices for modified files (Ryan Graham)
+
+ * test: handling of missing shrinkwrap file (Ryan Graham)
+
+ * clean up Project name and license accessors (Ryan Graham)
+
+ * test: behaviour when package.json is missing (Ryan Graham)
+
+ * test: test usage without git (Ryan Graham)
+
+ * test: add basic test for bower support (Ryan Graham)
+
+ * refactor: extract ghSlugFrom() method (Ryan Graham)
+
+ * test: add nameVer() test (Ryan Graham)
+
+ * [semver-major] completely remove sl-blip (Ryan Graham)
+
+ * refactor Project class common getter/setters (Ryan Graham)
+
+ * remove TODOs from code (Ryan Graham)
+
+ * support ghSlug generation without requiring git (Ryan Graham)
+
+ * test: handling of non-file CONTRIBUTING.md (Ryan Graham)
+
+ * remove unused function from copyright module (Ryan Graham)
+
+ * additional unit tests for Project class (Ryan Graham)
+
+ * test: clean up copyright header tests (Ryan Graham)
+
+ * test: refactor license test cases (Ryan Graham)
+
+ * test: extract setup helper function (Ryan Graham)
+
+ * bithound: mark minimist as ignored-unused (Ryan Graham)
+
+ * upgrade eslint, tap, gift, require node v4 (Ryan Graham)
+
+ * [breaking] remove slt-stage command (Ryan Graham)
+
+ * remove ruby version of slt-changelog (Ryan Graham)
+
+ * fix typo in push command instructions (Eddie Monge)
+
+ * travis: quote after_script (Ryan Graham)
+
+ * lint: fix warning about expr usage (Ryan Graham)
+
+ * report coverage to codacy (Ryan Graham)
+
+
 2016-09-12, Version 4.5.2
 =========================
 
