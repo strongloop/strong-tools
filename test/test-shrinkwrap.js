@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2016. All Rights Reserved.
+// Copyright IBM Corp. 2016,2017. All Rights Reserved.
 // Node module: strong-tools
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -37,5 +37,15 @@ test('shrinkwrapping', function(t) {
   return tools.shrinkwrap.cli(SANDBOX_FILE).then(function() {
     var updated = fs.readFileSync(SANDBOX_FILE, 'utf8');
     t.equal(updated, EXPECTED, 'should change shrinkwrap to match expected');
+  });
+});
+
+test('bad shrinkwrap file', function(t) {
+  tools.shrinkwrap.cli.out = function() {};
+  return tools.shrinkwrap.cli(SANDBOX_FILE + '-missing').then(function() {
+    t.fail('should have errored out');
+  }).catch(function(err) {
+    t.type(err, Error);
+    t.match(err.message, 'ENOENT');
   });
 });

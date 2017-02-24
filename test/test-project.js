@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2014,2016. All Rights Reserved.
+// Copyright IBM Corp. 2014,2017. All Rights Reserved.
 // Node module: strong-tools
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -7,12 +7,15 @@
 
 var fs = require('fs');
 var helpers = require('./helpers');
+var mkdirp = require('mkdirp');
 var path = require('path');
+var rimraf = require('rimraf');
 var test = require('tap').test;
 var Project = require('../lib/project');
 
 var SANDBOX = path.resolve(__dirname, 'SANDBOX-project');
 var SANDBOX_PKG = path.resolve(SANDBOX, 'package.json');
+var SANDBOX_BOWER = path.resolve(SANDBOX, 'bower.json');
 
 test('setup', function(t) {
   helpers.resetSandboxSync(t, SANDBOX, SANDBOX_PKG, {
@@ -40,6 +43,8 @@ test('package parsing', function(t) {
   var p1 = new Project(SANDBOX);
   t.ok(!('version' in p1.rawPkgJSON),
        'does not modify data on load');
+  t.strictEqual(p1.nameVer(), 'testing@1.0.0-0');
+  t.strictEqual(p1.license(), 'SEE LICENSE.md');
   t.strictEqual(p1.version(), '1.0.0-0',
                    'reports 1.0.0-0 as version if missing');
   p1.version(p1.version());
@@ -53,9 +58,9 @@ test('package parsing', function(t) {
   t.end();
 });
 
-test('package info gathering', function(t) {
-  var self = new Project(require.resolve('../package.json'));
-  self.gather(function(err, project) {
+test('package info gathering with git', function(t) {
+  var pkgPath = require.resolve('../package.json');
+  var self = new Project(pkgPath, function(err, project) {
     t.ifErr(err, 'should not error out');
     t.same(self, project);
     t.equal(project.get('license'), 'MIT');
@@ -63,6 +68,19 @@ test('package info gathering', function(t) {
     // fake out the name so we know it wasn't used to generate the gh slug
     project.normalizedPkgJSON.name = 'not-really';
     t.equal(project.ghSlug(), 'strongloop/strong-tools');
+    t.end();
+  });
+});
+
+test('package info gathering without git', function(t) {
+  var self = new Project(require.resolve('../package.json'));
+  self.git = null;
+  self.gather(function(err, project) {
+    t.ifErr(err, 'should not error out');
+    t.notOk(project.git, 'project has no git reference');
+    t.same(self, project);
+    t.equal(project.get('license'), 'MIT');
+    t.equal(project.license(), 'MIT');
     t.end();
   });
 });
@@ -93,4 +111,44 @@ test('script getter/setter', function(t) {
     t.notOk(self.script('not-real'));
     t.end();
   });
+});
+
+test('github repo slug extraction', function(t) {
+  var testCases = [
+    ['https://github.com/myOrg/myRepo', 'myOrg/myRepo'],
+    ['https://github.com/myOrg/myRepo.git', 'myOrg/myRepo'],
+    ['git@github.com:myOrg/myRepo', 'myOrg/myRepo'],
+    ['git@github.com:myOrg/myRepo.git', 'myOrg/myRepo'],
+    ['git+ssh://git@github.com/myOrg/myRepo', 'myOrg/myRepo'],
+    ['git+ssh://git@github.com/myOrg/myRepo.git', 'myOrg/myRepo'],
+    ['https://github.corp.com/myOrg/myRepo', undefined],
+    ['https://bitbucket.org/myOrg/myRepo', undefined],
+  ];
+  t.plan(testCases.length);
+  testCases.forEach(function(tc) {
+    t.equal(Project.ghSlugFrom(tc[0]), tc[1]);
+  });
+});
+
+test('bower support', function(t) {
+  var pkgjson = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
+  fs.writeFileSync(SANDBOX_BOWER, JSON.stringify(pkgjson), 'utf8');
+  var p1 = new Project(SANDBOX);
+  t.strictEqual(p1.version(), '1.0.0-0');
+  p1.version('2.3.4');
+  p1.persist();
+  var bower = JSON.parse(fs.readFileSync(SANDBOX_BOWER, 'utf8'));
+  t.strictEqual(p1.version(), '2.3.4');
+  t.strictEqual(bower.version, '2.3.4');
+  t.end();
+});
+
+test('package inference without package.json', function(t) {
+  var SANDBOX_NOJSON = path.resolve(__dirname, 'SANDBOX-no-json');
+  rimraf.sync(SANDBOX_NOJSON);
+  mkdirp.sync(SANDBOX_NOJSON);
+  var p1 = new Project(SANDBOX_NOJSON);
+  t.equal(p1.nameVer(), 'SANDBOX-no-json@1.0.0-0');
+  t.equal(p1.license(), 'SEE LICENSE.md');
+  t.end();
 });
