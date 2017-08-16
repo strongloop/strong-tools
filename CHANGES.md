@@ -1,3 +1,17 @@
+2017-08-16, Version 5.1.0
+=========================
+
+ * test: update for shrinkwrap changes (Ryan Graham)
+
+ * strip 'from' and 'integrity' from shrinkwraps (Ryan Graham)
+
+ * add copyright.owner/identifier support (Ryan Graham)
+
+ * add support for TypeScript to 'slt copyright' (Ryan Graham)
+
+ * update copyright years in LICENSE (Ryan Graham)
+
+
 2017-02-24, Version 5.0.0
 =========================
 
