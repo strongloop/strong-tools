@@ -16,6 +16,8 @@ var Project = require('../lib/project');
 var SANDBOX = path.resolve(__dirname, 'SANDBOX-project');
 var SANDBOX_PKG = path.resolve(SANDBOX, 'package.json');
 var SANDBOX_BOWER = path.resolve(SANDBOX, 'bower.json');
+var SANDBOX_SHRINKWRAP = path.resolve(SANDBOX, 'npm-shrinkwrap.json');
+var SANDBOX_PACKAGE_LOCK = path.resolve(SANDBOX, 'package-lock.json');
 
 test('setup', function(t) {
   helpers.resetSandboxSync(t, SANDBOX, SANDBOX_PKG, {
@@ -140,6 +142,32 @@ test('bower support', function(t) {
   var bower = JSON.parse(fs.readFileSync(SANDBOX_BOWER, 'utf8'));
   t.strictEqual(p1.version(), '2.3.4');
   t.strictEqual(bower.version, '2.3.4');
+  t.end();
+});
+
+test('package-lock support', function(t) {
+  var pkgjson = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
+  fs.writeFileSync(SANDBOX_PACKAGE_LOCK, JSON.stringify(pkgjson), 'utf8');
+  var p1 = new Project(SANDBOX);
+  t.strictEqual(p1.version(), '2.3.4');
+  p1.version('4.5.6');
+  p1.persist();
+  var pkgLock = JSON.parse(fs.readFileSync(SANDBOX_PACKAGE_LOCK, 'utf8'));
+  t.strictEqual(p1.version(), '4.5.6');
+  t.strictEqual(pkgLock.version, '4.5.6');
+  t.end();
+});
+
+test('shrinkwrap support', function(t) {
+  var pkgjson = JSON.parse(fs.readFileSync(SANDBOX_PKG, 'utf8'));
+  fs.writeFileSync(SANDBOX_SHRINKWRAP, JSON.stringify(pkgjson), 'utf8');
+  var p1 = new Project(SANDBOX);
+  t.strictEqual(p1.version(), '4.5.6');
+  p1.version('3.4.5');
+  p1.persist();
+  var shrinkwrap = JSON.parse(fs.readFileSync(SANDBOX_SHRINKWRAP, 'utf8'));
+  t.strictEqual(p1.version(), '3.4.5');
+  t.strictEqual(shrinkwrap.version, '3.4.5');
   t.end();
 });
 

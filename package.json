@@ -25,7 +25,6 @@
   "homepage": "https://github.com/strongloop/strong-tools",
   "dependencies": {
     "bluebird": "^3.1.1",
-    "debug": "^2.2.0",
     "gift": "^0.10.0",
     "glob": "^7.0.3",
     "json-file-plus": "^3.0.1",
@@ -44,8 +43,7 @@
     "node": ">=4"
   },
   "devDependencies": {
-    "codacy-coverage": "^2.0.0",
-    "eslint": "^3.14.1",
+    "eslint": "^4.6.1",
     "eslint-config-strongloop": "^2",
     "mkdirp": "^0.5.1",
     "rimraf": "^2.2.8",
