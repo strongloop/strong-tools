@@ -17,8 +17,11 @@ used.
 
 What slt-release will do:
  - generate a CHANGES.md file
- - increment package version in package.json and bower.json (if present)
- - commit CHANGES.md, package.json, bower.json, and npm-shrinkwrap.json
+ - increment package version in package metadata files (when present):
+    - package.json, bower.json, npm-shrinkwrap.json, package-lock.json
+ - commit CHANGES.md, package.json
+    - also commit bower.json, npm-shrinkwrap.json, package-lock.json
+      if present
  - tag commit with an annotated tag
  - merge tag back in to base branch
    - IF npm-shrinkwrap.json was not previously part of that branch then
@@ -125,7 +128,7 @@ echo "Updating package version to $V"
 slt version set "$V"
 
 echo "Committing package and CHANGES for v$V"
-TO_ADD="$(git ls-files bower.json) package.json CHANGES.md"
+TO_ADD="$(git ls-files bower.json package-lock.json) package.json CHANGES.md"
 TO_REMOVE=""
 if [ -e npm-shrinkwrap.json ]; then
   if ! git cat-file -e "$BASE":npm-shrinkwrap.json; then
