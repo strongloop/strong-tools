@@ -1,3 +1,11 @@
+2017-09-06, Version 5.2.0
+=========================
+
+ * feat: bump versions in lock files if present (Ryan Graham)
+
+ * chore: update deps and CI configs (Ryan Graham)
+
+
 2017-08-16, Version 5.1.0
 =========================
 
