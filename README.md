@@ -3,7 +3,6 @@ strong-tools
 
 Helpers for building, testing, staging, and releasing modules the way StrongLoop
 does.
-
 Install from npmjs.org:
 
     npm install -g strong-tools
